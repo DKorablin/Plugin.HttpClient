@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BA1FF5B9-5442-4B82-9B80-8663522ACB8A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Plugin.HttpClient</RootNamespace>
+    <AssemblyName>Plugin.HttpClient</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\AlphaOmega.pfx</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Plugin.HttpClient\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Plugin.HttpClient\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ObjectListView, Version=2.9.6.0, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>..\packages\ObjectListView.2.9.6\lib\net20\ObjectListView.dll</HintPath>
+    </Reference>
+    <Reference Include="PEReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Shared.Classes\AlphaOmega.Debug\FileReader\PEReader\PEReader\bin\Debug\PEReader.dll</HintPath>
+    </Reference>
+    <Reference Include="SAL.Flatbed, Version=1.2.9.2, Culture=neutral, PublicKeyToken=a8ac5fc45c3adb8d, processorArchitecture=MSIL">
+      <HintPath>..\packages\SAL.Flatbed.1.2.9.2\lib\net20\SAL.Flatbed.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SAL.Windows, Version=1.2.9.2, Culture=neutral, PublicKeyToken=a8ac5fc45c3adb8d, processorArchitecture=MSIL">
+      <HintPath>..\packages\SAL.Windows.1.2.9.2\lib\net20\SAL.Windows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Shared.Classes\AlphaOmega.Windows.Forms\DraggableTreeView.cs">
+      <Link>UI\DraggableTreeView.cs</Link>
+    </Compile>
+    <Compile Include="Constant.cs" />
+    <Compile Include="Events\ProjectClosedEventArgs.cs" />
+    <Compile Include="Events\ToggleProjectDirtyEventArgs.cs" />
+    <Compile Include="Extensions\TypeExtender.cs" />
+    <Compile Include="Project\AuthorizationType.cs" />
+    <Compile Include="Project\HttpItem.cs" />
+    <Compile Include="Project\SerializableDictionary.cs" />
+    <Compile Include="Project\TemplateEngine.cs" />
+    <Compile Include="Project\TemplateItem.cs" />
+    <Compile Include="Project\TemplateItemSource.cs" />
+    <Compile Include="Project\TemplateValuePosition.cs" />
+    <Compile Include="Project\ValidationEngine.cs" />
+    <Compile Include="Reflection\AssemblyAnalyzer.cs" />
+    <Compile Include="Reflection\Data\ApiMethodInfo.cs" />
+    <Compile Include="Reflection\Data\ApiServiceInfo.cs" />
+    <Compile Include="Reflection\Data\ApiTypeInfo.cs" />
+    <Compile Include="Events\SearchProjectItemEventArgs.cs" />
+    <Compile Include="Events\SearchForProjectEventArgs.cs" />
+    <Compile Include="Test\RequestBuilder.cs" />
+    <Compile Include="Test\RequestTemplateBuilder.cs" />
+    <Compile Include="Test\ResultValidation.cs" />
+    <Compile Include="Test\TestEngine.cs" />
+    <Compile Include="Test\ValidationFailureStatus.cs" />
+    <Compile Include="UI\DefaultTextToolStripComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\DynamicAttributesTypeDescriptor.cs" />
+    <Compile Include="UI\HttpTestsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\ProjectTreeListItem.cs" />
+    <Compile Include="UI\RestoreStatePropertyGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\SearchGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SearchGrid.designer.cs">
+      <DependentUpon>SearchGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\TemplateEditorGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Test\TestProgressChangedArgs.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="History\HistoryActionType.cs" />
+    <Compile Include="History\HistoryChangedEventArgs.cs" />
+    <Compile Include="History\HistoryController.cs" />
+    <Compile Include="History\HttpHistoryItem.cs" />
+    <Compile Include="PanelHttpHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PanelHttpHistory.Designer.cs">
+      <DependentUpon>PanelHttpHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\HttpProject.cs" />
+    <Compile Include="Project\HttpProjectItem.cs" />
+    <Compile Include="Project\HttpProjectItemCollection.cs" />
+    <Compile Include="Server\HttpListenerWrapper.cs" />
+    <Compile Include="Server\HttpServerFacade.cs" />
+    <Compile Include="Test\RequestTest.cs" />
+    <Compile Include="Test\ResultException.cs" />
+    <Compile Include="Test\ResultFailure.cs" />
+    <Compile Include="Test\ResultResponse.cs" />
+    <Compile Include="Test\ResultBase.cs" />
+    <Compile Include="PanelHttpClient.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PanelHttpClient.Designer.cs">
+      <DependentUpon>PanelHttpClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelHttpClientSettings.cs" />
+    <Compile Include="PluginSettings.cs" />
+    <Compile Include="PluginWindows.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ColumnEditor.cs" />
+    <Compile Include="UI\ColumnEditorTyped.cs" />
+    <Compile Include="UI\DictionaryEditor\DictionaryPropertyDescriptor.cs" />
+    <Compile Include="UI\DictionaryEditor\DictionaryPropertyGridAdapter.cs" />
+    <Compile Include="UI\HeadersEditor\HttpEditorBase.cs" />
+    <Compile Include="UI\HeadersEditor\HttpHeaderEditors.cs" />
+    <Compile Include="UI\ProjectTreeNode.cs" />
+    <Compile Include="UI\HttpTestsTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Test\TestStartArgs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PanelHttpClient.resx">
+      <DependentUpon>PanelHttpClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelHttpHistory.resx">
+      <DependentUpon>PanelHttpHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SearchGrid.resx">
+      <DependentUpon>SearchGrid.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\Plugin.HttpClient.Project.TemplateItem.datasource" />
+    <None Include="Resources\iconOpen.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iconDelete.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iconPublish.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bnCompile.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bnStop.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bnHistory.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bnTemplates.bmp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
