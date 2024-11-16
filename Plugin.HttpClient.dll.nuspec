@@ -24,7 +24,7 @@
 	</metadata>
 	<files>
 		<file src="readme.md" target="docs" />
-		<file src="bin\net20\Plugin.HttpClient.xml" target="xml" />
+		<!--file src="bin\net20\Plugin.HttpClient.xml" target="xml" /-->
 		<file src="bin\net20\Plugin.HttpClient.dll" target="lib\net20" />
 	</files>
 </package>
