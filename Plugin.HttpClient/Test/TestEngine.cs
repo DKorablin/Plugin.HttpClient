@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using Plugin.HttpClient.Project;
 using Plugin.HttpClient.UI;
@@ -35,15 +33,15 @@ namespace Plugin.HttpClient.Test
 
 		private Boolean InvokeTest(RequestTest test, Func<Boolean> isChancelled)
 		{
-			test.Item.Image = ProjectTreeNode.TreeImageList.Running;
+			test.Item.Image = NodeStateEnum.Running;
 			this.OnTestChanged?.Invoke(this, new TestProgressChangedArgs(test.Item));
-			ProjectTreeNode.TreeImageList status = ProjectTreeNode.TreeImageList.Failure;
+			NodeStateEnum status = NodeStateEnum.Failure;
 
 			test.InvokeTest();
 			if(test.Result.IsSuccess)
-				status = ProjectTreeNode.TreeImageList.Success;
+				status = NodeStateEnum.Success;
 			else if(test.Result is ResultResponse resultF && resultF.StatusCode == HttpStatusCode.Forbidden)
-				status = ProjectTreeNode.TreeImageList.FailureForbidden;
+				status = NodeStateEnum.FailureForbidden;
 			else if(test.Result is ResultException exc)
 				this._args.Plugin.Trace.TraceData(TraceEventType.Error, 10, exc.Exception);
 			else if(test.Result is ResultValidation resultV)
@@ -62,7 +60,7 @@ namespace Plugin.HttpClient.Test
 			this.OnTestChanged?.Invoke(this, new TestProgressChangedArgs(test));
 
 			Boolean isNotCancelled = !isChancelled();
-			Boolean isNotFailure = status != ProjectTreeNode.TreeImageList.Failure;
+			Boolean isNotFailure = status != NodeStateEnum.Failure;
 			Boolean isNotStopOnError = !this._args.Plugin.Settings.StopOnError;
 			return isNotCancelled
 				&& (isNotFailure || !isNotStopOnError);

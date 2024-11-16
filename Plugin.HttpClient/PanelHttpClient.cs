@@ -444,9 +444,9 @@ namespace Plugin.HttpClient
 			{
 				foreach(HttpProjectItem selected in lvRequests.SelectedObjects)
 				{
-					ProjectTreeNode.TreeImageList image = selected.Image == ProjectTreeNode.TreeImageList.Skip
-						? ProjectTreeNode.TreeImageList.New
-						: ProjectTreeNode.TreeImageList.Skip;
+					NodeStateEnum image = selected.Image == NodeStateEnum.Skip
+						? NodeStateEnum.New
+						: NodeStateEnum.Skip;
 					selected.Image = image;
 
 					foreach(HttpProjectItem children in selected.Items.EnumerateItems())

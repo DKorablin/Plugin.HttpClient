@@ -28,9 +28,35 @@ jobs:
     - name: Testing .NET
       run: dotnet test ${{env.SolutionName}}.sln --no-build --verbosity normal
 
+  files_exists:
+    name: Checking project existence
+    needs: [version]
+    runs-on: ubuntu-latest
+    outputs:
+      net_framework_project_exists: ${{steps.net_framework.outputs.files_exists}}
+      net_project_exists: ${{steps.net.outputs.files_exists}}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{secrets.SUBMODULE_TOKEN}}
+        submodules: false
+    - name: .NET Framework project exists
+      id: net_framework
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "${{github.workspace}}/${{env.SolutionName}}/${{env.SolutionName}}35.csproj"
+        ignore_case: true
+    - name: .NET project exists
+      id: net
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "${{github.workspace}}/${{env.SolutionName}}/${{env.SolutionName}}.csproj"
+        ignore_case: true
+
   build_net_framework:
     name: Building .NET Framework assembly
-    needs: [test_net_windows]
+    needs: [test_net_windows,files_exists]
+    if: needs.files_exists.outputs.net_framework_project_exists == 'true'
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -46,7 +72,8 @@ jobs:
 
   build_net:
     name: Building .NET assembly
-    needs: [test_net_windows]
+    needs: [test_net_windows,files_exists]
+    if: needs.files_exists.outputs.net_project_exists == 'true'
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4

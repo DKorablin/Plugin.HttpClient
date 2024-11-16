@@ -70,10 +70,10 @@ namespace Plugin.HttpClient.Test
 			default: throw new NotSupportedException();
 			}
 
-			this.Items = items.Where(i => i.Image != ProjectTreeNode.TreeImageList.Skip).ToArray();
+			this.Items = items.Where(i => i.Image != NodeStateEnum.Skip).ToArray();
 
 			foreach(HttpProjectItem elem in this.Items)
-				elem.Image = ProjectTreeNode.TreeImageList.New;
+				elem.Image = NodeStateEnum.New;
 
 			this.Plugin = plugin;
 			this.Type = type;

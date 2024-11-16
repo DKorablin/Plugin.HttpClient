@@ -21,19 +21,19 @@ namespace Plugin.HttpClient.Project
 		private String _httpResponse;
 
 		[NonSerialized]
-		private ProjectTreeNode.TreeImageList _image = ProjectTreeNode.TreeImageList.New;
+		private NodeStateEnum _image = NodeStateEnum.New;
 
 		#region Properties
 		internal String HttpResponse
 		{
 			get => this._httpResponse;
-			set => base.SetField(ref this._httpResponse, value, nameof(HttpResponse));
+			set => base.SetField(ref this._httpResponse, value, nameof(this.HttpResponse));
 		}
 
-		internal ProjectTreeNode.TreeImageList Image
+		internal NodeStateEnum Image
 		{
 			get => this._image;
-			set => base.SetField(ref this._image, value, nameof(Image));
+			set => base.SetField(ref this._image, value, nameof(this.Image));
 		}
 
 		public new String Address
@@ -42,7 +42,7 @@ namespace Plugin.HttpClient.Project
 			set
 			{
 				if(!String.IsNullOrEmpty(value))
-					base.Address = this.ApplyTemplate(nameof(Address), value, false);
+					base.Address = this.ApplyTemplate(nameof(this.Address), value, false);
 			}
 		}
 
@@ -51,215 +51,215 @@ namespace Plugin.HttpClient.Project
 		[OLVColumn("Address", DisplayIndex = 0, IsEditable = true, IsTileViewColumn = true, UseFiltering = false, UseInitialLetterForGroup = false, AutoCompleteEditor = false, WordWrap = false)]
 		public String AddressReal
 		{
-			get => this.ApplyTemplate(nameof(AddressReal), base.Address, true);
+			get => this.ApplyTemplate(nameof(this.AddressReal), base.Address, true);
 		}
 
 		[OLVColumn(MinimumWidth = 50, IsEditable = false, UseFiltering = true, FillsFreeSpace = false)]
 		public new String Method
 		{
-			get => this.ApplyTemplate(nameof(Method), base.Method, true);
-			set => base.Method = this.ApplyTemplate(nameof(Method), value, false);
+			get => this.ApplyTemplate(nameof(this.Method), base.Method, true);
+			set => base.Method = this.ApplyTemplate(nameof(this.Method), value, false);
 		}
 
 		[OLVColumn(IsEditable = true, UseFiltering = true, IsVisible = false)]
 		public new Boolean AllowAutoRedirect
 		{
-			get => this.ApplyTemplate(nameof(AllowAutoRedirect), base.AllowAutoRedirect, true);
-			set => base.AllowAutoRedirect = this.ApplyTemplate(nameof(AllowAutoRedirect), value, false);
+			get => this.ApplyTemplate(nameof(this.AllowAutoRedirect), base.AllowAutoRedirect, true);
+			set => base.AllowAutoRedirect = this.ApplyTemplate(nameof(this.AllowAutoRedirect), value, false);
 		}
 
 		public new String Data
 		{
 			get => base.Data;
-			set => base.Data = this.ApplyTemplate(nameof(Data), value, false);
+			set => base.Data = this.ApplyTemplate(nameof(this.Data), value, false);
 		}
 
 		[Browsable(false)]
 		public String DataReal
 		{
-			get => this.ApplyTemplate(nameof(DataReal), base.Data, true);
+			get => this.ApplyTemplate(nameof(this.DataReal), base.Data, true);
 		}
 
 		[OLVColumn(IsEditable =false, UseFiltering = true, IsVisible = false)]
 		public new Int32 Timeout
 		{
-			get => this.ApplyTemplate(nameof(Timeout), base.Timeout, true);
-			set => base.Timeout = this.ApplyTemplate(nameof(Timeout), value, false);
+			get => this.ApplyTemplate(nameof(this.Timeout), base.Timeout, true);
+			set => base.Timeout = this.ApplyTemplate(nameof(this.Timeout), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new Int32 ReadWriteTimeout
 		{
-			get => this.ApplyTemplate(nameof(ReadWriteTimeout), base.ReadWriteTimeout, true);
-			set => base.ReadWriteTimeout = this.ApplyTemplate(nameof(ReadWriteTimeout), value, false);
+			get => this.ApplyTemplate(nameof(this.ReadWriteTimeout), base.ReadWriteTimeout, true);
+			set => base.ReadWriteTimeout = this.ApplyTemplate(nameof(this.ReadWriteTimeout), value, false);
 		}
 
 		[OLVColumn(IsEditable = true, UseFiltering = true, IsVisible = false)]
 		public new Boolean SendChunked
 		{
-			get => this.ApplyTemplate(nameof(SendChunked), base.SendChunked, true);
-			set => base.SendChunked = this.ApplyTemplate(nameof(SendChunked), value, false);
+			get => this.ApplyTemplate(nameof(this.SendChunked), base.SendChunked, true);
+			set => base.SendChunked = this.ApplyTemplate(nameof(this.SendChunked), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new AuthorizationType AuthorizationType
 		{
-			get => this.ApplyTemplate(nameof(AuthorizationType), base.AuthorizationType, true);
-			set => base.AuthorizationType = this.ApplyTemplate(nameof(AuthorizationType), value, false);
+			get => this.ApplyTemplate(nameof(this.AuthorizationType), base.AuthorizationType, true);
+			set => base.AuthorizationType = this.ApplyTemplate(nameof(this.AuthorizationType), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String UserName
 		{
-			get => this.ApplyTemplate(nameof(UserName), base.UserName, true);
-			set => base.UserName = this.ApplyTemplate(nameof(UserName), value, false);
+			get => this.ApplyTemplate(nameof(this.UserName), base.UserName, true);
+			set => base.UserName = this.ApplyTemplate(nameof(this.UserName), value, false);
 		}
 
 		public new String Password
 		{
-			get => this.ApplyTemplate(nameof(Password), base.Password, true);
-			set => base.Password = this.ApplyTemplate(nameof(Password), value, false);
+			get => this.ApplyTemplate(nameof(this.Password), base.Password, true);
+			set => base.Password = this.ApplyTemplate(nameof(this.Password), value, false);
 		}
 
 		public new String[] ClientCertificates
 		{
-			get => this.ApplyTemplate(nameof(ClientCertificates), base.ClientCertificates, true);
-			set => base.ClientCertificates = this.ApplyTemplate(nameof(ClientCertificates), value, false);
+			get => this.ApplyTemplate(nameof(this.ClientCertificates), base.ClientCertificates, true);
+			set => base.ClientCertificates = this.ApplyTemplate(nameof(this.ClientCertificates), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String ProxyAddress
 		{
-			get => this.ApplyTemplate(nameof(ProxyAddress), base.ProxyAddress, true);
-			set => base.ProxyAddress = this.ApplyTemplate(nameof(ProxyAddress), value, false);
+			get => this.ApplyTemplate(nameof(this.ProxyAddress), base.ProxyAddress, true);
+			set => base.ProxyAddress = this.ApplyTemplate(nameof(this.ProxyAddress), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String ProxyDomain
 		{
-			get => this.ApplyTemplate(nameof(ProxyDomain), base.ProxyDomain, true);
-			set => base.ProxyDomain = this.ApplyTemplate(nameof(ProxyDomain), value, false);
+			get => this.ApplyTemplate(nameof(this.ProxyDomain), base.ProxyDomain, true);
+			set => base.ProxyDomain = this.ApplyTemplate(nameof(this.ProxyDomain), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String ProxyUserName
 		{
-			get => this.ApplyTemplate(nameof(ProxyUserName), base.ProxyUserName, true);
-			set => base.ProxyUserName = this.ApplyTemplate(nameof(ProxyUserName), value, false);
+			get => this.ApplyTemplate(nameof(this.ProxyUserName), base.ProxyUserName, true);
+			set => base.ProxyUserName = this.ApplyTemplate(nameof(this.ProxyUserName), value, false);
 		}
 
 		public new String ProxyPassword
 		{
-			get => this.ApplyTemplate(nameof(ProxyPassword), base.ProxyPassword, true);
-			set => base.ProxyPassword = this.ApplyTemplate(nameof(ProxyPassword), value, false);
+			get => this.ApplyTemplate(nameof(this.ProxyPassword), base.ProxyPassword, true);
+			set => base.ProxyPassword = this.ApplyTemplate(nameof(this.ProxyPassword), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new Boolean UseDefaultProxyCredentials
 		{
-			get => this.ApplyTemplate(nameof(UseDefaultProxyCredentials), base.UseDefaultProxyCredentials, true);
-			set => base.UseDefaultProxyCredentials = this.ApplyTemplate(nameof(UseDefaultProxyCredentials), value, false);
+			get => this.ApplyTemplate(nameof(this.UseDefaultProxyCredentials), base.UseDefaultProxyCredentials, true);
+			set => base.UseDefaultProxyCredentials = this.ApplyTemplate(nameof(this.UseDefaultProxyCredentials), value, false);
 		}
 
 		public new String[] ProxyBypassList
 		{
-			get => this.ApplyTemplate(nameof(ProxyBypassList), base.ProxyBypassList, true);
-			set => base.ProxyBypassList = this.ApplyTemplate(nameof(ProxyBypassList), value, false);
+			get => this.ApplyTemplate(nameof(this.ProxyBypassList), base.ProxyBypassList, true);
+			set => base.ProxyBypassList = this.ApplyTemplate(nameof(this.ProxyBypassList), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String Accept
 		{
-			get => this.ApplyTemplate(nameof(Accept), base.Accept, true);
-			set => base.Accept = this.ApplyTemplate(nameof(Accept), value, false);
+			get => this.ApplyTemplate(nameof(this.Accept), base.Accept, true);
+			set => base.Accept = this.ApplyTemplate(nameof(this.Accept), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String Connection
 		{
-			get => this.ApplyTemplate(nameof(Connection), base.Connection, true);
-			set => base.Connection = this.ApplyTemplate(nameof(Connection), value, false);
+			get => this.ApplyTemplate(nameof(this.Connection), base.Connection, true);
+			set => base.Connection = this.ApplyTemplate(nameof(this.Connection), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String ContentType
 		{
-			get => this.ApplyTemplate(nameof(ContentType), base.ContentType, true);
-			set => base.ContentType = this.ApplyTemplate(nameof(ContentType), value, false);
+			get => this.ApplyTemplate(nameof(this.ContentType), base.ContentType, true);
+			set => base.ContentType = this.ApplyTemplate(nameof(this.ContentType), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new Int64? ContentLength
 		{
-			get => this.ApplyTemplate(nameof(ContentLength), base.ContentLength, true);
-			set => base.ContentLength = this.ApplyTemplate(nameof(ContentLength), value, false);
+			get => this.ApplyTemplate(nameof(this.ContentLength), base.ContentLength, true);
+			set => base.ContentLength = this.ApplyTemplate(nameof(this.ContentLength), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String Expect
 		{
-			get => this.ApplyTemplate(nameof(Expect), base.Expect, true);
-			set => base.Expect = this.ApplyTemplate(nameof(Expect), value, false);
+			get => this.ApplyTemplate(nameof(this.Expect), base.Expect, true);
+			set => base.Expect = this.ApplyTemplate(nameof(this.Expect), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String Referer
 		{
-			get => this.ApplyTemplate(nameof(Referer), base.Referer, true);
-			set => base.Referer = this.ApplyTemplate(nameof(Referer), value, false);
+			get => this.ApplyTemplate(nameof(this.Referer), base.Referer, true);
+			set => base.Referer = this.ApplyTemplate(nameof(this.Referer), value, false);
 		}
 
 		public new String[] CustomHeaders
 		{
-			get => this.ApplyTemplate(nameof(CustomHeaders), base.CustomHeaders, true);
-			set => base.CustomHeaders = this.ApplyTemplate(nameof(CustomHeaders), value, false);
+			get => this.ApplyTemplate(nameof(this.CustomHeaders), base.CustomHeaders, true);
+			set => base.CustomHeaders = this.ApplyTemplate(nameof(this.CustomHeaders), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String TransferEncoding
 		{
-			get => this.ApplyTemplate(nameof(TransferEncoding), base.TransferEncoding, true);
-			set => base.TransferEncoding = this.ApplyTemplate(nameof(TransferEncoding), value, false);
+			get => this.ApplyTemplate(nameof(this.TransferEncoding), base.TransferEncoding, true);
+			set => base.TransferEncoding = this.ApplyTemplate(nameof(this.TransferEncoding), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String UserAgent
 		{
-			get => this.ApplyTemplate(nameof(UserAgent), base.UserAgent, true);
-			set => base.UserAgent = this.ApplyTemplate(nameof(UserAgent), value, false);
+			get => this.ApplyTemplate(nameof(this.UserAgent), base.UserAgent, true);
+			set => base.UserAgent = this.ApplyTemplate(nameof(this.UserAgent), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new String Host
 		{
-			get => this.ApplyTemplate(nameof(Host), base.Host, true);
-			set => base.Host = this.ApplyTemplate(nameof(Host), value, false);
+			get => this.ApplyTemplate(nameof(this.Host), base.Host, true);
+			set => base.Host = this.ApplyTemplate(nameof(this.Host), value, false);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, IsVisible = false)]
 		public new HttpStatusCode ResponseStatus
 		{
-			get => this.ApplyTemplate(nameof(ResponseStatus), base.ResponseStatus, true);
-			set => base.ResponseStatus = this.ApplyTemplate(nameof(ResponseStatus), value, false);
+			get => this.ApplyTemplate(nameof(this.ResponseStatus), base.ResponseStatus, true);
+			set => base.ResponseStatus = this.ApplyTemplate(nameof(this.ResponseStatus), value, false);
 		}
 
 		public new String Response
 		{
 			get => base.Response;
-			set => base.Response = this.ApplyTemplate(nameof(Response), value, false);
+			set => base.Response = this.ApplyTemplate(nameof(this.Response), value, false);
 		}
 
 		[Browsable(false)]
 		public String ResponseReal
 		{
-			get => this.ApplyTemplate(nameof(ResponseReal), base.Response, true);
+			get => this.ApplyTemplate(nameof(this.ResponseReal), base.Response, true);
 		}
 
 		[OLVColumn(IsEditable = false, UseFiltering = true, FillsFreeSpace = false)]
 		public new String Description
 		{
-			get => this.ApplyTemplate(nameof(Description), base.Description, true);
-			set => base.Description = this.ApplyTemplate(nameof(Description), value, false);
+			get => this.ApplyTemplate(nameof(this.Description), base.Description, true);
+			set => base.Description = this.ApplyTemplate(nameof(this.Description), value, false);
 		}
 
 		/// <summary>Дочерние запросы удалённого сервера на тестирование</summary>

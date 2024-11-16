@@ -20,39 +20,20 @@ namespace Plugin.HttpClient.UI
 			public String HttpResponse { get; set; }
 		}
 
-		/// <summary>Изображение узлов дерева</summary>
-		public enum TreeImageList
-		{
-			/// <summary>Новый узел по которому ещё тест ещё не произведён</summary>
-			New = 0,
-			/// <summary>В работе</summary>
-			Running = 1,
-			/// <summary>Тест закончился удачей</summary>
-			Success = 2,
-			/// <summary>Тест провален</summary>
-			Failure = 3,
-			/// <summary>Тест провален. Запрещено</summary>
-			FailureForbidden = 4,
-			/// <summary>Папки в тестах не реализованы</summary>
-			Folder = 5,
-			/// <summary>Пропуск теста при запуске тестирования потока или всех URL'ов</summary>
-			Skip = 6,
-		}
-
 		/// <summary>Родительский тест в дереве</summary>
 		public new ProjectTreeNode Parent => (ProjectTreeNode)base.Parent;
 
 		/// <summary>Индекс изображения статуса теста</summary>
-		public new TreeImageList SelectedImageIndex
+		public new NodeStateEnum SelectedImageIndex
 		{
-			get => (TreeImageList)base.SelectedImageIndex;
+			get => (NodeStateEnum)base.SelectedImageIndex;
 			set => base.SelectedImageIndex = (Int32)value;
 		}
 
 		/// <summary>Индекс изображения статуса теста</summary>
-		public new TreeImageList ImageIndex
+		public new NodeStateEnum ImageIndex
 		{
-			get => (TreeImageList)base.ImageIndex;
+			get => (NodeStateEnum)base.ImageIndex;
 			set => base.ImageIndex = (Int32)value;
 		}
 
@@ -90,7 +71,7 @@ namespace Plugin.HttpClient.UI
 		{
 			this.SetNodeText(text);
 			base.Tag = new TagExtender();
-			this.SetImageIndex(TreeImageList.New);
+			this.SetImageIndex(NodeStateEnum.New);
 		}
 
 		/// <summary>Обновить текст узла дерева из объекта теста</summary>
@@ -99,11 +80,11 @@ namespace Plugin.HttpClient.UI
 
 		/// <summary>Пометить узел как пропущенный</summary>
 		public void ToggleSkipImageIndex()
-			=> this.SetImageIndex(this.ImageIndex == TreeImageList.Skip ? TreeImageList.New : TreeImageList.Skip);
+			=> this.SetImageIndex(this.ImageIndex == NodeStateEnum.Skip ? NodeStateEnum.New : NodeStateEnum.Skip);
 
 		/// <summary>Установить индекс изображения</summary>
 		/// <param name="icon">Тип картинки, который установить на узел</param>
-		public void SetImageIndex(TreeImageList icon)
+		public void SetImageIndex(NodeStateEnum icon)
 			=> this.SelectedImageIndex = this.ImageIndex = icon;
 
 		private void SetNodeText(String text)

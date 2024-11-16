@@ -62,9 +62,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\Shared.Classes\AlphaOmega.Windows.Forms\DraggableTreeView.cs">
-      <Link>UI\DraggableTreeView.cs</Link>
-    </Compile>
     <Compile Include="Constant.cs" />
     <Compile Include="Events\ProjectClosedEventArgs.cs" />
     <Compile Include="Events\ToggleProjectDirtyEventArgs.cs" />
@@ -95,7 +92,7 @@
     <Compile Include="UI\HttpTestsListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\ProjectTreeListItem.cs" />
+    <Compile Include="UI\NodeStateEnum.cs" />
     <Compile Include="UI\RestoreStatePropertyGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -151,10 +148,6 @@
     <Compile Include="UI\DictionaryEditor\DictionaryPropertyGridAdapter.cs" />
     <Compile Include="UI\HeadersEditor\HttpEditorBase.cs" />
     <Compile Include="UI\HeadersEditor\HttpHeaderEditors.cs" />
-    <Compile Include="UI\ProjectTreeNode.cs" />
-    <Compile Include="UI\HttpTestsTreeView.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Test\TestStartArgs.cs" />
   </ItemGroup>
   <ItemGroup>
