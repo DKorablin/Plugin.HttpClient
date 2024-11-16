@@ -157,7 +157,14 @@ jobs:
 
   deploy_nuget:
     name: Deploying NuGet package
-    needs: [version, build_net_framework, build_net]
+    needs:
+        - version
+        - build_net_framework
+        - build_net
+    if: |
+        always() &&
+        (needs.build_net_framework.result == 'skipped' || needs.build_net_framework.result == 'success') &&
+        (needs.build_net.result == 'skipped' || needs.build_net.result == 'success')
     runs-on: windows-latest
 
     steps:
