@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -12,6 +13,9 @@ namespace Plugin.HttpClient
 	{
 		public static Boolean IsBitSet(UInt32 flags, Int32 bit)
 			=> (flags & System.Convert.ToInt32(System.Math.Pow(2, bit))) != 0;
+
+		public static Boolean IsAssembly(String fileName)
+			=> ".dll".Equals(Path.GetExtension(fileName).ToLowerInvariant());
 
 		public static UInt32[] BitToInt(params Boolean[] bits)
 		{

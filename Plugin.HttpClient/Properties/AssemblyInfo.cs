@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("HTTP Test client & server")]
 [assembly: AssemblyCompany("Danila Korablin")]
 [assembly: AssemblyProduct("Plugin.HttpClient")]
-[assembly: AssemblyCopyright("Copyright © Danila Korablin 2015-2024")]
+[assembly: AssemblyCopyright("Copyright © Danila Korablin 2015-2025")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else

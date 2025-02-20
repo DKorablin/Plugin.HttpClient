@@ -77,14 +77,19 @@ namespace Plugin.HttpClient.Test
 			foreach(var key in request.Headers.AllKeys)
 			{
 				var value = request.Headers[key];
-				headers.Add($"--header \"{FormatCurlString(key)}: {FormatCurlString(value)}\"");
+				if(key.ToLowerInvariant().Equals("cookie"))
+					headers.Add($"--cookie \"{FormatCurlString(value)}\"");
+				else
+					headers.Add($"--header \"{FormatCurlString(key)}: {FormatCurlString(value)}\"");
 			}
 
 			String body = String.Empty;
 			if(data != null)
 				body = "--data ^\"" + FormatCurlString(data) + "\"";
+			else if(request.ContentLength == 0)
+				body = "--data {}";//Adding empty body if ContentLength != -1
 
-			return "curl "
+			return "curl -v "
 				+ "--request " + request.Method
 				+ " "
 				+ String.Join(" ", headers.ToArray())
@@ -157,7 +162,16 @@ namespace Plugin.HttpClient.Test
 				{
 					String formattedValue = this._templates.ApplyTemplateV2<String>(nameof(this.Item.CustomHeaders), header, true);
 					if(!String.IsNullOrEmpty(formattedValue))
-						result.Headers.Add(formattedValue);
+					{
+						const String cookieKey = "Cookie:";
+						Int32 keyIndex = formattedValue.IndexOf(cookieKey, StringComparison.OrdinalIgnoreCase);
+						if(keyIndex > -1)//Cookies will not be automatically placed to the headers
+						{
+							String[] cookies1 = formattedValue.Substring(cookieKey.Length).Split(';');
+							result.CookieContainer.ParseCookieHeader(requestUri, cookies1);
+						} else
+							result.Headers.Add(formattedValue);
+					}
 				}
 
 			// Rewriting Host header
@@ -172,7 +186,7 @@ namespace Plugin.HttpClient.Test
 			// Rewriting proxy
 			result.Proxy = this.CreateProxy();
 
-			// Adding access credentials to a remote server
+			// Adding access credentials to remote server
 			String userName = this.ApplyTemplate<String>(nameof(this.Item.UserName));
 			String password = this.ApplyTemplate<String>(nameof(this.Item.Password));
 			AuthorizationType authorizationType = this.ApplyTemplate<AuthorizationType>(nameof(this.Item.AuthorizationType));
@@ -194,7 +208,7 @@ namespace Plugin.HttpClient.Test
 				foreach(String path in clientCertificates)
 					result.ClientCertificates.Add(new X509Certificate(File.ReadAllBytes(path)));
 
-			// Generating
+			// Generating payload
 			data = this.ApplyTemplate<String>(nameof(this.Item.Data));
 
 			// Setting content-length manually

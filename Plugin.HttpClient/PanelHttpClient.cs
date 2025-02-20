@@ -306,7 +306,7 @@ namespace Plugin.HttpClient
 						return;
 
 					String fileName = dlg.FileName;
-					Boolean isAssembly = ".dll".Equals(Path.GetExtension(dlg.FileName).ToLowerInvariant());
+					Boolean isAssembly = Utils.IsAssembly(dlg.FileName);
 					if(isAssembly)
 						fileName = Path.GetFileNameWithoutExtension(fileName) + "." + Constant.Project.Extensions.Binary;
 					if(File.Exists(fileName) && MessageBox.Show($"{fileName} already exists.{Environment.NewLine}Do you want to replace it?", String.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -334,11 +334,12 @@ namespace Plugin.HttpClient
 					if(dlg.ShowDialog() != DialogResult.OK)
 						return;
 
-					Boolean isAssembly = ".dll".Equals(Path.GetExtension(dlg.FileName).ToLowerInvariant());
+					Boolean isAssembly = Utils.IsAssembly(dlg.FileName);
 					if(isAssembly)
 					{
 						HttpProject project = lvRequests.Project;
-						project.Import(this.Plugin.Settings.GetServerUrl(), dlg.FileName);
+						if(project.Import(this.Plugin.Settings.GetServerUrl(), dlg.FileName))
+							lvRequests.UpdateProjectItems();
 					} else
 					{
 						if(dlg.FileName == this.Settings.ProjectFileName)

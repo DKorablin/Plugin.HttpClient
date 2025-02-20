@@ -233,16 +233,18 @@ namespace Plugin.HttpClient.Project
 
 		/// <summary>Import WebAPI assembly file into current http project and skip endpoints that already exists in the current project.</summary>
 		/// <param name="serverUrl">Host url</param>
-		/// <param name="assemblyFilePath"></param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <exception cref="FileNotFoundException"></exception>
-		public void Import(String serverUrl, String assemblyFilePath)
+		/// <param name="assemblyFilePath">Path to assembly to import</param>
+		/// <exception cref="ArgumentNullException">Path to assembly required</exception>
+		/// <exception cref="FileNotFoundException">Assembly not found in the specified path</exception>
+		/// <returns>Items imported succesfully or nothing found</returns>
+		public Boolean Import(String serverUrl, String assemblyFilePath)
 		{
 			if(String.IsNullOrEmpty(assemblyFilePath))
 				throw new ArgumentNullException(nameof(assemblyFilePath));
 			if(!File.Exists(assemblyFilePath))
 				throw new FileNotFoundException($"{assemblyFilePath} does not exist", assemblyFilePath);
 
+			Boolean result = false;
 			AssemblyAnalyzer analyzer = new AssemblyAnalyzer();
 			foreach(var route in analyzer.FindEndpoints(assemblyFilePath))
 			{
@@ -265,8 +267,15 @@ namespace Plugin.HttpClient.Project
 					else
 						firstItem.Items.Add(item);
 				}
-				this.Items.Add(firstItem);
+
+				if(firstItem != null)//Item already added
+				{
+					this.Items.Add(firstItem);
+					result = true;
+				}
 			}
+
+			return result;
 		}
 
 		public void SaveAsBin(Stream stream)

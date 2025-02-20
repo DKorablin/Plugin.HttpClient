@@ -65,6 +65,7 @@
     <Compile Include="Constant.cs" />
     <Compile Include="Events\ProjectClosedEventArgs.cs" />
     <Compile Include="Events\ToggleProjectDirtyEventArgs.cs" />
+    <Compile Include="Extensions\CookieContainerExtenders.cs" />
     <Compile Include="Extensions\TypeExtender.cs" />
     <Compile Include="Project\AuthorizationType.cs" />
     <Compile Include="Project\HttpItem.cs" />

@@ -165,6 +165,34 @@ namespace Plugin.HttpClient.UI
 			base.OnItemsAdding(e);
 		}
 
+		protected override void OnCanDrop(OlvDropEventArgs args)
+		{ 
+			args.Effect = args.DragEventArgs.Data.GetDataPresent(DataFormats.FileDrop)
+				&& args.DropTargetLocation == DropTargetLocation.Background//TODO: Implement ability to drop items inside or between specific nodes
+				? DragDropEffects.Move : DragDropEffects.None;
+
+			base.OnCanDrop(args);
+		}
+
+		protected override void OnDropped(OlvDropEventArgs args)
+		{
+			String[] files = (String[])args.DragEventArgs.Data.GetData(DataFormats.FileDrop);
+
+			Boolean isImorted = false;
+			foreach(String filePath in files)
+				if(Utils.IsAssembly(filePath))
+				{
+					HttpProject project = this.Project;
+					if(project.Import(this.Plugin.Settings.GetServerUrl(), filePath))
+						isImorted = true;
+				}
+
+			if(isImorted)
+				this.UpdateProjectItems();
+
+			base.OnDropped(args);
+		}
+
 		protected override void OnModelCanDrop(ModelDropEventArgs args)
 		{
 			args.Handled = true;
@@ -357,10 +385,15 @@ namespace Plugin.HttpClient.UI
 					? HttpProject.Load(filePath)//Project loaded from file system
 					: new HttpProject();//Createing a new project
 
-			base.ClearObjects();
-			this.SetObjects(this.Project.Items);
+			this.UpdateProjectItems();
 
 			this.ToggleDirty(false);
+		}
+
+		public void UpdateProjectItems()
+		{//TODO: I don't like this idea. Better to add new items
+			base.ClearObjects();
+			this.SetObjects(this.Project.Items);
 		}
 	}
 }
