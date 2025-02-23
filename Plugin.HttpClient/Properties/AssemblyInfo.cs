@@ -8,9 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("ProjectUrl", "https://dkorablin.ru/project/Default.aspx?File=99")]
 #else
 
-[assembly: AssemblyTitle("Plugin.HttpClient")]
 [assembly: AssemblyDescription("HTTP Test client & server")]
-[assembly: AssemblyProduct("Plugin.HttpClient")]
 [assembly: AssemblyCopyright("Copyright © Danila Korablin 2015-2025")]
 
 #endif
