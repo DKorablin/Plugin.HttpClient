@@ -6,8 +6,8 @@
 		<Version>1.0.3.0</Version>
 	</PropertyGroup>
 	<PropertyGroup>
-		<BaseOutputPath>..\bin\$(Configuration)\</BaseOutputPath>
-		<OutputPath>..\bin\$(Configuration)\net2.0\</OutputPath>
-		<BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\..\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+		<BaseOutputPath>..\..\bin\$(SolutionName)</BaseOutputPath>
+		<OutputPath>..\..\bin\$(SolutionName)</OutputPath>
+		<BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\..\..\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
 	</PropertyGroup>
 </Project>
