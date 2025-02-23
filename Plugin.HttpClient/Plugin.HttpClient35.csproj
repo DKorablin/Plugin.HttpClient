@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <!--This to lines are added to separate build process between .NET & .NET Standard-->
-    <BaseOutputPath>$(MSBuildProjectDirectory)/obj/net20/$(MSBuildProjectName)/bin</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/net20/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
-    <Version>1.0.3.0</Version>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BA1FF5B9-5442-4B82-9B80-8663522ACB8A}</ProjectGuid>
@@ -193,22 +189,4 @@
     <None Include="Resources\bnTemplates.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="BeforeBuild">
-    <ItemGroup>
-      <AssemblyAttributes Include="AssemblyVersion">
-        <_Parameter1>$(Version)</_Parameter1>
-      </AssemblyAttributes>
-      <AssemblyAttributes Include="AssemblyFileVersion">
-        <_Parameter1>$(Version)</_Parameter1>
-      </AssemblyAttributes>
-      <AssemblyAttributes Include="AssemblyInformationalVersion">
-        <_Parameter1>$(Version)</_Parameter1>
-      </AssemblyAttributes>
-    </ItemGroup>
-    <MakeDir Directories="$(IntermediateOutputPath)" />
-    <WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs" AssemblyAttributes="@(AssemblyAttributes)" />
-    <ItemGroup>
-      <Compile Include="$(IntermediateOutputPath)Version.cs" />
-    </ItemGroup>
-  </Target>
 </Project>
