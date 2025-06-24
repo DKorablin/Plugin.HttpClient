@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace Plugin.HttpClient
 {
@@ -152,6 +154,68 @@ namespace Plugin.HttpClient
 				public const String Binary = "bhtst";
 				public const String Xml = "xhtst";
 				public const String Json = "jhtst";
+
+				/// <summary>Filters for OpenFile dialog box</summary>
+				[Flags]
+				public enum FilterTypes
+				{
+					/// <summary>Include known projects extensions filter</summary>
+					Projects,
+					/// <summary>Include .dll filter for WebAPI assemblies (*.dll)</summary>
+					Assemblies,
+					/// <summary>Include filter for all files (*.*)</summary>
+					AllFiles,
+				}
+
+				/// <summary>Check is this file is .NET assembly</summary>
+				/// <param name="fileName">The file which extension to check</param>
+				/// <returns>true when extension belong to assembly</returns>
+				public static Boolean IsAssembly(String fileName)
+					=> ".dll".Equals(Path.GetExtension(fileName).ToLowerInvariant());
+
+				/// <summary>Check is this file is HTTP project</summary>
+				/// <param name="fileName">The file name which extension to check</param>
+				/// <returns>true if extension belongs to project</returns>
+				public static Boolean IsProject(String fileName)
+				{
+					String ext = Path.GetExtension(fileName).ToLowerInvariant();
+					switch(ext)
+					{
+					case "." + Binary:
+					case "." + Xml:
+					case "." + Json:
+						return true;
+					default:
+						return false;
+					}
+				}
+
+				public static String CreateFilter(FilterTypes extensionFilter = FilterTypes.Projects)
+				{
+					StringBuilder result = new StringBuilder();
+					if((extensionFilter & FilterTypes.Projects) == FilterTypes.Projects)
+					{
+						String[] extensions = new String[] { Constant.Project.Extensions.Binary, Constant.Project.Extensions.Json, Constant.Project.Extensions.Xml, };
+						String hint = String.Join(", *.", extensions);
+						String filter = String.Join(";*.", extensions);
+						result.Append($"Http test list (*.{hint})|*.{filter}");
+					}
+
+					if((extensionFilter & FilterTypes.Assemblies) == FilterTypes.Assemblies)
+					{
+						if(result.Length > 0)
+							result.Append("|");
+						result.Append("WebAPI Assembly (*.dll)|*.dll");
+					}
+					if((extensionFilter & FilterTypes.AllFiles) == FilterTypes.AllFiles)
+					{
+						if(result.Length > 0)
+							result.Append("|");
+						result.Append("All files (*.*)|*.*");
+					}
+
+					return result.ToString();
+				}
 			}
 		}
 

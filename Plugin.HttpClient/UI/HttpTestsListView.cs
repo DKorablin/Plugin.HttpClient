@@ -166,10 +166,17 @@ namespace Plugin.HttpClient.UI
 		}
 
 		protected override void OnCanDrop(OlvDropEventArgs args)
-		{ 
-			args.Effect = args.DragEventArgs.Data.GetDataPresent(DataFormats.FileDrop)
-				&& args.DropTargetLocation == DropTargetLocation.Background//TODO: Implement ability to drop items inside or between specific nodes
-				? DragDropEffects.Move : DragDropEffects.None;
+		{
+			Boolean canDrop = args.DragEventArgs.Data.GetDataPresent(DataFormats.FileDrop)
+				&& args.DropTargetLocation == DropTargetLocation.Background;//TODO: Implement ability to drop items inside or between specific nodes
+
+			if(canDrop)
+			{
+				String[] files = (String[])args.DragEventArgs.Data.GetData(DataFormats.FileDrop);
+				canDrop = Array.TrueForAll(files, f => Constant.Project.Extensions.IsAssembly(f) || Constant.Project.Extensions.IsProject(f));
+			}
+
+			args.Effect = canDrop ? DragDropEffects.Move : DragDropEffects.None;
 
 			base.OnCanDrop(args);
 		}
@@ -178,16 +185,21 @@ namespace Plugin.HttpClient.UI
 		{
 			String[] files = (String[])args.DragEventArgs.Data.GetData(DataFormats.FileDrop);
 
-			Boolean isImorted = false;
+			Boolean isImported = false;
 			foreach(String filePath in files)
-				if(Utils.IsAssembly(filePath))
+				if(Constant.Project.Extensions.IsAssembly(filePath))
 				{
 					HttpProject project = this.Project;
-					if(project.Import(this.Plugin.Settings.GetServerUrl(), filePath))
-						isImorted = true;
+					if(project.ImportAssembly(this.Plugin.Settings.GetServerUrl(), filePath))
+						isImported = true;
+				}else if(Constant.Project.Extensions.IsProject(filePath))
+				{
+					HttpProject project = this.Project;
+					if(project.ImportProject(filePath))
+						isImported = true;
 				}
 
-			if(isImorted)
+			if(isImported)
 				this.UpdateProjectItems();
 
 			base.OnDropped(args);
@@ -292,8 +304,8 @@ namespace Plugin.HttpClient.UI
 			if(showSaveDialog)
 				using(SaveFileDialog dlg = new SaveFileDialog()
 				{
-					Filter = HttpProject.CreateFileExtensionsFilter(),
-					DefaultExt = Constant.Project.Extensions.Binary,
+					Filter = Constant.Project.Extensions.CreateFilter(),
+					DefaultExt = Constant.Project.Extensions.Xml,
 					AddExtension = true,
 					OverwritePrompt = true,
 					FileName = this.FilePath,
@@ -327,7 +339,7 @@ namespace Plugin.HttpClient.UI
 			else if(items.Length > 1)
 			{
 				isMultiDelete = true;
-				if(MessageBox.Show("Are you shure you want to remove selected nodes?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+				if(MessageBox.Show("Are you sure you want to remove selected nodes?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
 					return;
 			}
 
@@ -335,10 +347,10 @@ namespace Plugin.HttpClient.UI
 			{
 				if(item == null) continue;
 
-				if(isMultiDelete || MessageBox.Show("Are you shure you want to remove selected item?", item.Address, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				if(isMultiDelete || MessageBox.Show("Are you sure you want to remove selected item?", item.Address, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
 					if(!this.Project.Items.Remove(item))
-						throw new InvalidOperationException(String.Format("Ошибка удаления элемента {0} из массива", item));
+						throw new InvalidOperationException($"Error removing element {item} from array");
 
 					this.ToggleDirty(true);
 					this.RemoveObject(item);
@@ -383,7 +395,7 @@ namespace Plugin.HttpClient.UI
 				? this.Plugin.Settings.LoadProject()//Project loaded from internal storage
 				: File.Exists(filePath)
 					? HttpProject.Load(filePath)//Project loaded from file system
-					: new HttpProject();//Createing a new project
+					: new HttpProject();//Creating a new project
 
 			this.UpdateProjectItems();
 

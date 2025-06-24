@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using Plugin.HttpClient.Events;
@@ -30,7 +31,7 @@ namespace Plugin.HttpClient
 
 		public PanelHttpClientSettings Settings => this._settings ?? (this._settings = new PanelHttpClientSettings());
 
-		/// <summary>Форма доступна для интерактивного воздействия с клиентом</summary>
+		/// <summary>The form is available for interactive interaction with the client</summary>
 		private Boolean IsFormEnabled { get; set; } = true;
 		
 		public PanelHttpClient()
@@ -96,8 +97,8 @@ namespace Plugin.HttpClient
 				? PanelHttpClient.Caption
 				: String.Join(" - ", new String[] { Path.GetFileName(this.Settings.ProjectFileName), PanelHttpClient.Caption, });
 
-		/// <summary>Загрузить проект на форму</summary>
-		/// <param name="filePath">Путь к файлу или загрузка из локального хранилища</param>
+		/// <summary>Upload the project to the form</summary>
+		/// <param name="filePath">File path or download from local storage</param>
 		private void LoadProject()
 		{
 			if(!this.IsFormEnabled)
@@ -160,19 +161,19 @@ namespace Plugin.HttpClient
 		}
 
 		/// <summary>Block or unblock a form from client actions</summary>
-		/// <param name="lockCtrls">Block the form from client actions</param>
-		private void ToggleControls(Boolean lockCtrls)
+		/// <param name="lockControls">Block the form from client actions</param>
+		private void ToggleControls(Boolean lockControls)
 		{
-			tsddlProject.Enabled = !lockCtrls;
-			tsbnRequestAdd.Enabled = !lockCtrls;
-			tsbnRequestRemove.Enabled = !lockCtrls && lvRequests.SelectedObject != null;
-			ddlTemplateName.Enabled = !lockCtrls;
-			gvTemplates.Enabled = !lockCtrls;
-			bnAddTemplateName.Enabled = !lockCtrls;
-			tsbnLaunch.Image = lockCtrls ? Resources.bnStop : Resources.bnCompile;
+			tsddlProject.Enabled = !lockControls;
+			tsbnRequestAdd.Enabled = !lockControls;
+			tsbnRequestRemove.Enabled = !lockControls && lvRequests.SelectedObject != null;
+			ddlTemplateName.Enabled = !lockControls;
+			gvTemplates.Enabled = !lockControls;
+			bnAddTemplateName.Enabled = !lockControls;
+			tsbnLaunch.Image = lockControls ? Resources.bnStop : Resources.bnCompile;
 
-			this.IsFormEnabled = !lockCtrls;
-			this.Cursor = lvRequests.Cursor = lockCtrls ? Cursors.WaitCursor : Cursors.Default;
+			this.IsFormEnabled = !lockControls;
+			this.Cursor = lvRequests.Cursor = lockControls ? Cursors.WaitCursor : Cursors.Default;
 		}
 
 		private void PrepareTest(TestStartArgs args)
@@ -294,9 +295,9 @@ namespace Plugin.HttpClient
 			{
 				using(SaveFileDialog dlg = new SaveFileDialog()
 				{
-					Filter = $"{HttpProject.CreateFileExtensionsFilter()}|WebAPI Assembly (*.dll)|*.dll|All files (*.*)|*.*",
-					Title = "Create a new project...",
-					DefaultExt = Constant.Project.Extensions.Binary,
+					Filter = Constant.Project.Extensions.CreateFilter(Constant.Project.Extensions.FilterTypes.Projects | Constant.Project.Extensions.FilterTypes.Assemblies| Constant.Project.Extensions.FilterTypes.AllFiles),
+					Title = "Choose file name for a new project...",
+					DefaultExt = Constant.Project.Extensions.Xml,
 					CheckFileExists = false,
 					CheckPathExists = true,
 					OverwritePrompt = false,
@@ -306,7 +307,7 @@ namespace Plugin.HttpClient
 						return;
 
 					String fileName = dlg.FileName;
-					Boolean isAssembly = Utils.IsAssembly(dlg.FileName);
+					Boolean isAssembly = Constant.Project.Extensions.IsAssembly(dlg.FileName);
 					if(isAssembly)
 						fileName = Path.GetFileNameWithoutExtension(fileName) + "." + Constant.Project.Extensions.Binary;
 					if(File.Exists(fileName) && MessageBox.Show($"{fileName} already exists.{Environment.NewLine}Do you want to replace it?", String.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -314,7 +315,7 @@ namespace Plugin.HttpClient
 
 					HttpProject project = new HttpProject();
 					if(isAssembly)
-						project.Import(this.Plugin.Settings.GetServerUrl(), dlg.FileName);
+						project.ImportAssembly(this.Plugin.Settings.GetServerUrl(), dlg.FileName);
 
 					//Creating an empty project to mark that file exists. Because when a new window is opened we check that such file exists and was not removed
 					project.Save(fileName);
@@ -327,18 +328,21 @@ namespace Plugin.HttpClient
 			{
 				using(OpenFileDialog dlg = new OpenFileDialog()
 				{
-					Filter = $"{HttpProject.CreateFileExtensionsFilter()}|WebAPI Assembly (*.dll)|*.dll|All files (*.*)|*.*",
-					DefaultExt = Constant.Project.Extensions.Binary,
+					Filter = Constant.Project.Extensions.CreateFilter(Constant.Project.Extensions.FilterTypes.Projects | Constant.Project.Extensions.FilterTypes.Assemblies | Constant.Project.Extensions.FilterTypes.AllFiles),
+					Title = "Choose existing project or generate project based on WebAPI assembly...",
+					DefaultExt = Constant.Project.Extensions.Xml,
+					CheckFileExists = true,
+					CheckPathExists = true,
 				})
 				{
 					if(dlg.ShowDialog() != DialogResult.OK)
 						return;
 
-					Boolean isAssembly = Utils.IsAssembly(dlg.FileName);
+					Boolean isAssembly = Constant.Project.Extensions.IsAssembly(dlg.FileName);
 					if(isAssembly)
 					{
 						HttpProject project = lvRequests.Project;
-						if(project.Import(this.Plugin.Settings.GetServerUrl(), dlg.FileName))
+						if(project.ImportAssembly(this.Plugin.Settings.GetServerUrl(), dlg.FileName))
 							lvRequests.UpdateProjectItems();
 					} else
 					{
@@ -349,7 +353,37 @@ namespace Plugin.HttpClient
 							this.Plugin.Trace.TraceEvent(TraceEventType.Warning, 1, "Failed to open {0} window", typeof(PanelHttpClient));
 					}
 				}
-			} else if(e.ClickedItem == tsmiProjectExport)
+			}else if(e.ClickedItem == tsmiProjectAppend)
+			{
+				using(OpenFileDialog dlg = new OpenFileDialog()
+				{
+					Filter = Constant.Project.Extensions.CreateFilter(Constant.Project.Extensions.FilterTypes.Projects | Constant.Project.Extensions.FilterTypes.Assemblies | Constant.Project.Extensions.FilterTypes.AllFiles),
+					Title = "Choose existing project or WebAPI assembly",
+					DefaultExt = Constant.Project.Extensions.Xml,
+					CheckFileExists = true,
+					CheckPathExists = true,
+				})
+				{
+					if(dlg.ShowDialog() != DialogResult.OK)
+						return;
+
+					Boolean isImported = false;
+					if(Constant.Project.Extensions.IsAssembly(dlg.FileName))
+					{
+						HttpProject project = this.lvRequests.Project;
+						if(project.ImportAssembly(this.Plugin.Settings.GetServerUrl(), dlg.FileName))
+							isImported = true;
+					} else if(Constant.Project.Extensions.IsProject(dlg.FileName))
+					{
+						HttpProject project = this.lvRequests.Project;
+						if(project.ImportProject(dlg.FileName))
+							isImported = true;
+					}
+					if(isImported)
+						this.lvRequests.UpdateProjectItems();
+				}
+			}
+			else if(e.ClickedItem == tsmiProjectExport)
 				lvRequests.SaveProjectToFile(true);
 			else if(e.ClickedItem == tsmiProjectImport)
 				lvRequests.SaveProjectToStorage();
@@ -498,13 +532,13 @@ namespace Plugin.HttpClient
 		}
 
 		#region Templates
-		private Int32? _searchHeigth;
+		private Int32? _searchHeight;
 		private void tsTemplates_Resize(Object sender, EventArgs e)
 		{
-			if(this._searchHeigth == null)
-				this._searchHeigth = ddlTemplateName.Height;
+			if(this._searchHeight == null)
+				this._searchHeight = ddlTemplateName.Height;
 			ddlTemplateName.Size = new Size(tsTemplates.Width - bnAddTemplateName.Width - bnEditTemplates.Width - 5, ddlTemplateName.Height);
-			ddlTemplateName.Height = this._searchHeigth.Value;
+			ddlTemplateName.Height = this._searchHeight.Value;
 		}
 
 		private void ddlTemplateName_SelectedIndexChanged(Object sender, EventArgs e)

@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Json;
 using System.Security.Permissions;
+using System.Text;
 using System.Xml.Serialization;
 using Plugin.HttpClient.Reflection;
 using static Plugin.HttpClient.Constant;
@@ -21,7 +22,7 @@ namespace Plugin.HttpClient.Project
 		#region Serialization
 		private sealed class UniversalDeserializationBinder : SerializationBinder
 		{
-			public override Type BindToType(String assemblyName, String typeName)//Applying object mapping, excluding versioninig
+			public override Type BindToType(String assemblyName, String typeName)//Applying object mapping, excluding versioning
 				=> Type.GetType(typeName);
 		}
 
@@ -51,7 +52,7 @@ namespace Plugin.HttpClient.Project
 		private Dictionary<String, TemplateItem[]> _templatesCollection;
 
 		#region Properties
-		/// <summary>Элементы запроса удалённого сервера</summary>
+		/// <summary>Remote server request elements</summary>
 		[XmlArray]
 		public HttpProjectItemCollection Items
 			=> this._items ?? (this._items = new HttpProjectItemCollection(this));
@@ -97,8 +98,8 @@ namespace Plugin.HttpClient.Project
 
 		}
 
-		/// <summary>Сериализационный конструктор</summary>
-		/// <param name="info">Информция по сериализации</param>
+		/// <summary>Serialization constructor</summary>
+		/// <param name="info">Serialization Information</param>
 		/// <param name="context">Stream</param>
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		private HttpProject(SerializationInfo info, StreamingContext context)
@@ -151,8 +152,8 @@ namespace Plugin.HttpClient.Project
 			}
 		}
 
-		/// <summary>Запись в сериализованный поток элементов коллекции под определённым идентификатором</summary>
-		/// <param name="info">Информация по сериализации</param>
+		/// <summary>Write to a serialized stream the elements of a collection under a specific identifier</summary>
+		/// <param name="info">Serialization Information</param>
 		/// <param name="context">Stream</param>
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -231,13 +232,67 @@ namespace Plugin.HttpClient.Project
 				}
 		}
 
+		/// <summary>Import project from external file to current project</summary>
+		/// <param name="projectFilePath">Path to project to import</param>
+		/// <param name="ownerItem">The parent item that is used as the owner for adding items (If none specified it will be added to the root)</param>
+		/// <returns>True if something added</returns>
+		public Boolean ImportProject(String projectFilePath, HttpProjectItem ownerItem = null)
+		{
+			if(String.IsNullOrEmpty(projectFilePath))
+				throw new ArgumentNullException(nameof(projectFilePath));
+			if(!File.Exists(projectFilePath))
+				throw new FileNotFoundException($"{projectFilePath} does not exist", projectFilePath);
+
+			Boolean isItemsAdded = false;
+			HttpProjectItemCollection firstItem = ownerItem?.Items
+				?? this.Items;
+
+			HttpProject importingProject = HttpProject.Load(projectFilePath);
+			foreach(HttpProjectItem item in importingProject.Items)
+			{
+				if(!firstItem.Any(p => p.Equals(item)))
+				{
+					isItemsAdded = true;
+					firstItem.Add(item);
+				}
+			}
+
+			Boolean isTemplatesAdded = false;
+			foreach(var kv in importingProject.TemplatesCollection)
+			{
+				if(this.TemplatesCollection.ContainsKey(kv.Key))
+				{
+					TemplateItem[] existingItems = this.TemplatesCollection[kv.Key];
+					foreach(TemplateItem item in kv.Value)
+					{
+						if(!Array.Exists(existingItems, p => p.Key == item.Key))
+						{
+							isTemplatesAdded = true;
+							Array.Resize(ref existingItems, existingItems.Length + 1);
+							existingItems[existingItems.Length - 1] = item;
+						}
+					}
+
+					if(isTemplatesAdded)
+						this.TemplatesCollection[kv.Key] = existingItems;
+				} else
+				{
+					this.TemplatesCollection.Add(kv.Key, kv.Value);
+					isTemplatesAdded = true;
+				}
+			}
+
+			return isItemsAdded || isTemplatesAdded;
+		}
+
 		/// <summary>Import WebAPI assembly file into current http project and skip endpoints that already exists in the current project.</summary>
 		/// <param name="serverUrl">Host url</param>
 		/// <param name="assemblyFilePath">Path to assembly to import</param>
+		/// <param name="ownerItem">Parent item that used as an owner for added items</param>
 		/// <exception cref="ArgumentNullException">Path to assembly required</exception>
 		/// <exception cref="FileNotFoundException">Assembly not found in the specified path</exception>
-		/// <returns>Items imported succesfully or nothing found</returns>
-		public Boolean Import(String serverUrl, String assemblyFilePath)
+		/// <returns>Items imported successfully or nothing found</returns>
+		public Boolean ImportAssembly(String serverUrl, String assemblyFilePath, HttpProjectItem ownerItem = null)
 		{
 			if(String.IsNullOrEmpty(assemblyFilePath))
 				throw new ArgumentNullException(nameof(assemblyFilePath));
@@ -268,9 +323,13 @@ namespace Plugin.HttpClient.Project
 						firstItem.Items.Add(item);
 				}
 
-				if(firstItem != null)//Item already added
+				if(firstItem != null)//Item already added or nothing found
 				{
-					this.Items.Add(firstItem);
+					if(ownerItem != null)
+						ownerItem.Items.Add(firstItem);
+					else
+						this.Items.Add(firstItem);
+
 					result = true;
 				}
 			}
@@ -352,14 +411,6 @@ namespace Plugin.HttpClient.Project
 				throw;
 			}
 			return result;
-		}
-
-		internal static String CreateFileExtensionsFilter()
-		{
-			String[] extensions = new String[] { Constant.Project.Extensions.Binary, Constant.Project.Extensions.Json, Constant.Project.Extensions.Xml, };
-			String hint = String.Join(", *.", extensions);
-			String filter = String.Join(";*.", extensions);
-			return $"Http test list (*.{hint})|*.{filter}";
 		}
 		#endregion Save/Load
 	}

@@ -36,7 +36,7 @@ namespace Plugin.HttpClient.Project
 		/// <param name="isApply">Apply template item and replace key by value OR replace template value by key</param>
 		/// <returns></returns>
 		public Object ApplyTemplateV2R(String propertyName, Type baseValueType, Object baseValue, Boolean isApply)
-			=> Utils.InvokeGerericMethod(this, nameof(ApplyTemplateV2), baseValueType, new Object[] { propertyName, baseValue, isApply, });
+			=> Utils.InvokeGenericMethod(this, nameof(ApplyTemplateV2), baseValueType, new Object[] { propertyName, baseValue, isApply, });
 
 		/// <summary>Apply template keys from selected template to object property</summary>
 		/// <typeparam name="T">The type of current property</typeparam>
@@ -71,7 +71,7 @@ namespace Plugin.HttpClient.Project
 
 		/// <summary>Gets the list of all template keys with values and with template name</summary>
 		/// <remarks>We can't sort items here because we need different sort order when viewing templates and applying templates</remarks>
-		/// <returns>Template items from selected template neme and from <see cref="Constant.Project.DefaultTemplateName"/> if selected didn't contains any values</returns>
+		/// <returns>Template items from selected template name and from <see cref="Constant.Project.DefaultTemplateName"/> if selected didn't contains any values</returns>
 		public virtual IEnumerable<TemplateItemSource> GetTemplateValuesWithSource()
 		{
 			TemplateItem[] selected = this.SelectedTemplateValues;
@@ -259,10 +259,10 @@ namespace Plugin.HttpClient.Project
 					return 1;//...and y is null, x is greater.
 				else
 				{// ...and y is not null, compare the lengths of the two strings.
-					Int32 retval = x.Length.CompareTo(y.Length);
+					Int32 result = x.Length.CompareTo(y.Length);
 
-					return retval != 0
-						? retval// If the strings are not of equal length, the longer string is greater.
+					return result != 0
+						? result// If the strings are not of equal length, the longer string is greater.
 						: x.CompareTo(y);// If the strings are of equal length, sort them with ordinary string comparison.
 				}
 			}

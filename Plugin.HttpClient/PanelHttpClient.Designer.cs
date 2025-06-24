@@ -45,6 +45,7 @@ namespace Plugin.HttpClient
 			this.tsmiProjectOpen = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiProjectExport = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiProjectImport = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiProjectAppend = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsbnLaunch = new System.Windows.Forms.ToolStripSplitButton();
 			this.tsmiLaunch = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsbnHistory = new System.Windows.Forms.ToolStripButton();
@@ -157,7 +158,8 @@ namespace Plugin.HttpClient
             tsddlProjectSeparator,
             this.tsmiProjectExport,
             this.tsmiProjectImport,
-            this.tsmiProjectUndo});
+            this.tsmiProjectUndo,
+			this.tsmiProjectAppend});
 			this.tsddlProject.Image = global::Plugin.HttpClient.Properties.Resources.iconOpen;
 			this.tsddlProject.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsddlProject.Name = "tsddlProject";
@@ -189,19 +191,28 @@ namespace Plugin.HttpClient
 			// 
 			this.tsmiProjectExport.Name = "tsmiProjectExport";
 			this.tsmiProjectExport.Size = new System.Drawing.Size(224, 26);
-			this.tsmiProjectExport.Text = "&Export...";
+			this.tsmiProjectExport.Text = "&Export project...";
+			this.tsmiProjectExport.ToolTipText = "Export project to external file";
 			// 
 			// tsmiProjectImport
 			// 
 			this.tsmiProjectImport.Name = "tsmiProjectImport";
 			this.tsmiProjectImport.Size = new System.Drawing.Size(224, 26);
-			this.tsmiProjectImport.Text = "&Import";
+			this.tsmiProjectImport.Text = "&Import project";
+			this.tsmiProjectImport.ToolTipText = "Import project from external file inside local storage";
 			// 
 			// tsmiProjectUndo
 			// 
 			this.tsmiProjectUndo.Name = "tsmiProjectUndo";
 			this.tsmiProjectUndo.Size = new System.Drawing.Size(224, 26);
 			this.tsmiProjectUndo.Text = "&Undo";
+			// 
+			// tsmiProjectAppend
+			// 
+			this.tsmiProjectAppend.Name = "tsmiProjectAppend";
+			this.tsmiProjectAppend.Size = new System.Drawing.Size(224, 26);
+			this.tsmiProjectAppend.Text = "&Append to project";
+			this.tsmiProjectAppend.ToolTipText = "Append to current folder supported file with tests";
 			// 
 			// tsbnLaunch
 			// 
@@ -597,6 +608,7 @@ namespace Plugin.HttpClient
 		private System.Windows.Forms.ToolStripMenuItem tsmiProjectNew;
 		private System.Windows.Forms.ToolStripMenuItem tsmiProjectExport;
 		private System.Windows.Forms.ToolStripMenuItem tsmiProjectImport;
+		private System.Windows.Forms.ToolStripMenuItem tsmiProjectAppend;
 		private System.Windows.Forms.ToolStripMenuItem tsmiProjectUndo;
 		private System.Windows.Forms.ToolStripButton tsbnProjectSave;
 		private System.Windows.Forms.ToolStripMenuItem tsmiProjectCopy;

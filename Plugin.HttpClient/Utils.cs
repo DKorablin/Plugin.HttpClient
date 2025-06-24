@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Win32;
-using Plugin.HttpClient.Project;
 
 namespace Plugin.HttpClient
 {
@@ -14,16 +12,13 @@ namespace Plugin.HttpClient
 		public static Boolean IsBitSet(UInt32 flags, Int32 bit)
 			=> (flags & System.Convert.ToInt32(System.Math.Pow(2, bit))) != 0;
 
-		public static Boolean IsAssembly(String fileName)
-			=> ".dll".Equals(Path.GetExtension(fileName).ToLowerInvariant());
-
 		public static UInt32[] BitToInt(params Boolean[] bits)
 		{
 			UInt32[] result = new UInt32[] { };
 			Int32 counter = 0;
 			for(Int32 loop = 0; loop < bits.Length; loop++)
 			{
-				if(result.Length <= loop)//Увеличиваю массив на один, если не помещается значение
+				if(result.Length <= loop)//I increase the array by one if the value does not fit
 					Array.Resize<UInt32>(ref result, result.Length + 1);
 
 				for(Int32 innerLoop = 0; innerLoop < 32; innerLoop++)
@@ -73,7 +68,7 @@ namespace Plugin.HttpClient
 			if(canConvert)
 				return converter.ConvertFrom(from);
 			else if(toType == typeof(Object))
-				return from;//HACK: This situation happenens when property value is null then it always be the Object type
+				return from;//HACK: This situation happenings when property value is null then it always be the Object type
 
 			if(toType.IsArray)
 			{
@@ -87,9 +82,9 @@ namespace Plugin.HttpClient
 				throw new FormatException($"Can't convert from {fromType} to {toType}");
 		}
 
-		/// <summary>Проверка исключения на фатальное, после которого дальнейшее выполнение кода невозможно</summary>
-		/// <param name="exception">Исключение для проверки</param>
-		/// <returns>Исключение фатальное</returns>
+		/// <summary>Checking for a fatal exception after which further code execution is impossible</summary>
+		/// <param name="exception">Exception for verification</param>
+		/// <returns>The exception is fatal</returns>
 		public static Boolean IsFatal(Exception exception)
 		{
 			while(exception != null)
@@ -104,7 +99,7 @@ namespace Plugin.HttpClient
 		}
 
 		/// <summary>Gets the content-type from registry or null if unknown extension specified</summary>
-		/// <param name="extension">Extension by whitch to receive content type</param>
+		/// <param name="extension">Extension by which to receive content type</param>
 		/// <returns>The content type from extension</returns>
 		public static String GetContentTypeFromExtension(String extension)
 		{//TODO: .NET 4.5 -> System.Web.MimeMapping.GetMimeMapping
@@ -113,7 +108,7 @@ namespace Plugin.HttpClient
 			return value?.ToString();
 		}
 
-		/// <summary>Gets the file extension from content-type using registre</summary>
+		/// <summary>Gets the file extension from content-type from registry</summary>
 		/// <param name="contentType">Content-Type by which to receive file extension</param>
 		/// <returns>The extension by content-type or null if specified content type is not found</returns>
 		public static String GetExtensionFromContentType(String contentType)
@@ -129,7 +124,7 @@ namespace Plugin.HttpClient
 		/// <param name="objectType">The type of generic object</param>
 		/// <param name="parameters">Invocation method arguments.</param>
 		/// <returns>Result ob method invocation</returns>
-		public static Object InvokeGerericMethod(Object instance, String methodName, Type objectType, Object[] parameters)
+		public static Object InvokeGenericMethod(Object instance, String methodName, Type objectType, Object[] parameters)
 		{
 			MethodInfo method = instance.GetType().GetMethod(methodName);
 			MethodInfo generic = method.MakeGenericMethod(objectType);
