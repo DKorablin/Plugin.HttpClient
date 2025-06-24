@@ -159,8 +159,8 @@ namespace Plugin.HttpClient
 			}
 		}
 
-		/// <summary>Заблокировать или разблокировать форму от действий клиента</summary>
-		/// <param name="lockCtrls">Заблокировать форму от действий клиента</param>
+		/// <summary>Block or unblock a form from client actions</summary>
+		/// <param name="lockCtrls">Block the form from client actions</param>
 		private void ToggleControls(Boolean lockCtrls)
 		{
 			tsddlProject.Enabled = !lockCtrls;
