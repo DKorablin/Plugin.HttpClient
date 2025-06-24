@@ -3,9 +3,11 @@ name: Test, Buid, Release
 on:
   push:
     branches: [ "master" ]
+  workflow_dispatch:
 
 env:
   SolutionName: ${{github.event.repository.name}}
+  NuGetPackageSourceCredentials_github_DKorablin: Username=${{github.actor}};Password=${{secrets.GITHUB_TOKEN}}
 
 jobs:
   test_net_windows:
