@@ -65,6 +65,7 @@
     <Compile Include="Extensions\TypeExtender.cs" />
     <Compile Include="Project\AuthorizationType.cs" />
     <Compile Include="Project\HttpItem.cs" />
+    <Compile Include="Project\HttpItemResponse.cs" />
     <Compile Include="Project\SerializableDictionary.cs" />
     <Compile Include="Project\TemplateEngine.cs" />
     <Compile Include="Project\TemplateItem.cs" />

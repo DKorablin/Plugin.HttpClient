@@ -19,7 +19,7 @@ namespace AlphaOmega.Windows.Forms
 
 		private Boolean _lockSize;
 
-		/// <summary>Таблица по которой осуществлять поиск</summary>
+		/// <summary>ListView to perform search against</summary>
 		public ListView ListView
 		{
 			get => this._listView;
@@ -35,7 +35,7 @@ namespace AlphaOmega.Windows.Forms
 			}
 		}
 
-		/// <summary>Таблица, по которой осуществлять поиск</summary>
+		/// <summary>DataGridView to perform search against</summary>
 		public DataGridView DataGrid
 		{
 			get => this._dataGrid;
@@ -87,7 +87,7 @@ namespace AlphaOmega.Windows.Forms
 			get => base.Visible;
 			set
 			{
-				//if(base.Visible != value)//DockStyle=Fill перекрывает открытый контролл поиска
+				//if(base.Visible != value)//DockStyle=Fill overlays the open search control
 				{
 					base.Visible = value;
 					if(DesignMode) return;
@@ -107,7 +107,7 @@ namespace AlphaOmega.Windows.Forms
 
 						switch(this.Dock)
 						{
-						case DockStyle.Top://Присобачить поиск к верхней части таблицы
+						case DockStyle.Top://Attach search panel to top of grid
 							if(value)
 							{
 								if(this.GridControl.Dock != DockStyle.Fill)
@@ -116,7 +116,7 @@ namespace AlphaOmega.Windows.Forms
 							} else if(this.GridControl.Dock != DockStyle.Fill)
 								this.GridControl.Location = new Point(location.X, location.Y - thisSize.Height);
 							break;
-						case DockStyle.Bottom://Присобачить поиск к нижней части таблицы
+						case DockStyle.Bottom://Attach search panel to bottom of grid
 							if(value)
 								this.Location = new Point(location.X, size.Height - thisSize.Height);
 							break;
@@ -129,7 +129,7 @@ namespace AlphaOmega.Windows.Forms
 			}
 		}
 
-		/// <summary>Текст для поиска</summary>
+		/// <summary>Text to search</summary>
 		[DefaultValue("")]
 		public String TextToFind
 		{
@@ -137,7 +137,7 @@ namespace AlphaOmega.Windows.Forms
 			set => this.FindText(value);
 		}
 
-		/// <summary>Разрешить поиск по регистру</summary>
+		/// <summary>Enable case sensitive search</summary>
 		[DefaultValue(false)]
 		public Boolean EnableFindCase
 		{
@@ -145,15 +145,15 @@ namespace AlphaOmega.Windows.Forms
 			set => cbCase.Visible = value;
 		}
 
-		/// <summary>Разрешить подсветку найденных строк</summary>
+		/// <summary>Enable highlighting of found rows</summary>
 		[DefaultValue(false)]
-		public Boolean EnableFindHilight
+		public Boolean EnableFindHighlight
 		{
 			get => cbHilight.Visible;
 			set => cbHilight.Visible = value;
 		}
 
-		/// <summary>Разрешить передвижение вверх и вниз по найденным результатам</summary>
+		/// <summary>Enable previous/next navigation among found results</summary>
 		[DefaultValue(false)]
 		public Boolean EnableFindPrevNext
 		{
@@ -161,8 +161,8 @@ namespace AlphaOmega.Windows.Forms
 			set => bnNext.Visible = bnPrevious.Visible = value;
 		}
 
-		/// <summary>Разрешиь подстветку текста при вводе</summary>
-		public Boolean EnableSearchHilight { get; set; }
+		/// <summary>Enable dynamic highlight while typing</summary>
+		public Boolean EnableSearchHighlight { get; set; }
 
 		public event EventHandler<EventArgs> OnSearch;
 		public event EventHandler<EventArgs> OnSearchClosed;
@@ -176,12 +176,12 @@ namespace AlphaOmega.Windows.Forms
 		public void FindText(String text)
 			=> this.FindText(text,cbHilight.Checked);
 
-		public void FindText(String text, Boolean isHilight)
+		public void FindText(String text, Boolean isHighlight)
 		{
 			txtFind.Text = text;
 			if(!String.IsNullOrEmpty(text))
 				this.Visible = true;
-			cbHilight.Checked = isHilight;
+			cbHilight.Checked = isHighlight;
 		}
 
 		void GridControl_KeyDown(Object sender, KeyEventArgs e)
@@ -189,7 +189,7 @@ namespace AlphaOmega.Windows.Forms
 			switch(e.KeyData)
 			{
 			case Keys.F | Keys.Control:
-				//if(!this.Visible)//DockStyle=Fill перекрывает открытый контролл поиска
+				//if(!this.Visible)//DockStyle=Fill overlays the open search control
 				this.Visible = true;
 				txtFind.Focus();
 				txtFind.SelectAll();
@@ -208,9 +208,9 @@ namespace AlphaOmega.Windows.Forms
 				this.Size = new Size(size.Width, thisSize.Height);
 				switch(this.Dock)
 				{
-				case DockStyle.Top://Присобачить поиск к верхней части таблицы
+			case DockStyle.Top://Attach search panel to top of grid
 					break;
-				case DockStyle.Bottom://Присобачить поиск к нижней части таблицы
+			case DockStyle.Bottom://Attach search panel to bottom of grid
 					this.Location = new Point(location.X, location.Y + size.Height);
 					break;
 				default: throw new NotImplementedException();
@@ -218,14 +218,14 @@ namespace AlphaOmega.Windows.Forms
 			}
 		}
 
-		/// <summary>Привязка данных закончена</summary>
+		/// <summary>Data binding completed</summary>
 		private void DataGrid_DataBindingComplete(Object sender, DataGridViewBindingCompleteEventArgs e)
 		{
 			if(e.ListChangedType == ListChangedType.Reset)
 				this.txtFind_TextChanged(txtFind, e);
 		}
 
-		/// <summary>Обработка кнопок фокуса на элементе поиска</summary>
+		/// <summary>Handle key events while search box has focus</summary>
 		private void SearchGrid_KeyDown(Object sender, KeyEventArgs e)
 		{
 			switch(e.KeyData)
@@ -233,7 +233,7 @@ namespace AlphaOmega.Windows.Forms
 			case Keys.Enter:
 				if(this.OnSearch != null)
 					this.OnSearch.Invoke(this, EventArgs.Empty);
-				else//If Enter key is not overrided, then using default search behavior on focus on Text field
+				else//If Enter key is not overridden, then using default search behavior on focus on Text field
 					this.FindNextCell(txtFind.Text, cbCase.Checked);
 				e.Handled = true;
 				break;
@@ -244,15 +244,15 @@ namespace AlphaOmega.Windows.Forms
 			}
 		}
 
-		/// <summary>Перевезти подсветку на следующую найденную ячейку</summary>
+		/// <summary>Move highlight to next found cell</summary>
 		private void bnNext_Click(Object sender, EventArgs e)
 			=> this.FindNextCell(txtFind.Text, cbCase.Checked);
 
 		private void bnPrevious_Click(Object sender, EventArgs e)
 			=> this.FindPreviousCell(txtFind.Text);
 
-		/// <summary>Подсветка найденных ячеек</summary>
-		private void cbHilight_CheckedChanged(Object sender, EventArgs e)
+		/// <summary>Highlight found cells</summary>
+		private void cbHighlight_CheckedChanged(Object sender, EventArgs e)
 		{
 			if(cbHilight.Checked)
 				this.ColorizeFounded(txtFind.Text);
@@ -260,11 +260,11 @@ namespace AlphaOmega.Windows.Forms
 				this.ClearColorize();
 		}
 
-		/// <summary>Поиск используя регистр</summary>
+		/// <summary>Search using case sensitivity</summary>
 		private void cbCase_CheckedChanged(Object sender, EventArgs e)
 			=> this.txtFind_TextChanged(sender, e);
 
-		/// <summary>Поиск по изменившемуся тексту</summary>
+		/// <summary>Search when text changes</summary>
 		private void txtFind_TextChanged(Object sender, EventArgs e)
 		{
 			if(this.Visible && txtFind.ForeColor == Color.Empty)
@@ -274,8 +274,8 @@ namespace AlphaOmega.Windows.Forms
 					isFound = this.ColorizeFounded(txtFind.Text);
 				else
 					isFound = this.FindFirstCell(txtFind.Text);
-				if(this.EnableSearchHilight)
-					this.HilightSearch(isFound);
+				if(this.EnableSearchHighlight)
+					this.HighlightSearch(isFound);
 			}
 		}
 
@@ -301,7 +301,7 @@ namespace AlphaOmega.Windows.Forms
 			}
 		}
 
-		/// <summary>Отвязать события от элемента управления</summary>
+		/// <summary>Detach events from underlying grid control</summary>
 		private void DetachEvents()
 		{
 			if(this.DataGrid != null)
@@ -317,7 +317,7 @@ namespace AlphaOmega.Windows.Forms
 			this.GridControl.Resize -= new EventHandler(GridControl_Resize);
 		}
 
-		/// <summary>Привязать события к элкменту управления</summary>
+		/// <summary>Attach events to underlying grid control</summary>
 		private void AttachEvents()
 		{
 			if(DesignMode)
@@ -337,20 +337,20 @@ namespace AlphaOmega.Windows.Forms
 			this.GridControl.Resize += new EventHandler(GridControl_Resize);
 		}
 
-		/// <summary>Подсветка строки поиска текста</summary>
-		/// <param name="isFounded">Значения найдены</param>
-		private void HilightSearch(Boolean isFounded)
+		/// <summary>Highlight search textbox depending on match result</summary>
+		/// <param name="isFounded">Values found</param>
+		private void HighlightSearch(Boolean isFounded)
 		{
 			isFounded = isFounded || String.IsNullOrEmpty(txtFind.Text);
 			txtFind.BackColor = isFounded ? Color.Empty : Color.Red;
 			txtFind.ForeColor = isFounded ? Color.Empty : Color.White;
 		}
 
-		/// <summary>Поиск первой найденной ячейки</summary>
-		/// <remarks>Возможно, колонка будет не текстовая, но тогда не возможно определить пользоватьельские колонки</remarks>
-		/// <param name="text">Текст для поиска</param>
-		/// <param name="matchCase">Текст в ячейке должен соответствовать регистру</param>
-		/// <returns>Найденная первая ячейка или null</returns>
+		/// <summary>Find first matching cell</summary>
+		/// <remarks>Column might not be textual; cannot determine user columns in that case</remarks>
+		/// <param name="text">Text to search</param>
+		/// <param name="matchCase">Cell text must match case</param>
+		/// <returns>True if a cell was found</returns>
 		private Boolean FindFirstCell(String text)
 		{
 			if(!String.IsNullOrEmpty(text))
@@ -427,10 +427,10 @@ namespace AlphaOmega.Windows.Forms
 			return false;
 		}
 
-		/// <summary>Найти следующую ячейку содержащую найденный текст</summary>
-		/// <param name="text">Текст для поиска</param>
-		/// <param name="matchCase">Соответствовать регистру</param>
-		/// <returns>Найденная ячейка или null</returns>
+		/// <summary>Find next cell containing search text</summary>
+		/// <param name="text">Text to search</param>
+		/// <param name="matchCase">Match case</param>
+		/// <returns>True if cell was found</returns>
 		private Boolean FindNextCell(String text, Boolean matchCase)
 		{
 			if(!String.IsNullOrEmpty(text))
@@ -455,7 +455,7 @@ namespace AlphaOmega.Windows.Forms
 					if(this.ListView.SelectedIndices.Count > 0)
 					{
 						rowIndex = this.ListView.SelectedIndices[this.ListView.SelectedIndices.Count - 1] + 1;
-						this.ListView.SelectedIndices.Clear();//Убираю все выделенные элементы (Нам надо показывать один новый найденный, а не выбранные)
+						this.ListView.SelectedIndices.Clear();//Remove all selected elements (We need to show one new found one, not the selected ones)
 					} else
 						rowIndex = 0;
 
@@ -495,7 +495,7 @@ namespace AlphaOmega.Windows.Forms
 									root.Parent.Expand();
 								return true;
 							} else if(this.FindFirstCellRec(text, root))
-								return true;//Поиск соответсвующих узлов в соседних узлах.
+								return true;//Search for matching nodes in neighboring nodes.
 						} while(root != null);
 					}
 				}
@@ -503,10 +503,10 @@ namespace AlphaOmega.Windows.Forms
 			return false;
 		}
 
-		/// <summary>Найти текст в предыдущей ячейке от выделенной</summary>
-		/// <param name="text">Текст для поика</param>
-		/// <param name="matchCase">Соответствовать регистру</param>
-		/// <returns>Найденная ячейка или null</returns>
+		/// <summary>Find previous cell containing search text</summary>
+		/// <param name="text">Text to search</param>
+		/// <param name="matchCase">Match case</param>
+		/// <returns>True if cell was found</returns>
 		private Boolean FindPreviousCell(String text)
 		{
 			if(!String.IsNullOrEmpty(text))
@@ -534,7 +534,7 @@ namespace AlphaOmega.Windows.Forms
 					if(this.ListView.SelectedIndices.Count > 0)
 					{
 						rowIndex = this.ListView.SelectedIndices[this.ListView.SelectedIndices.Count - 1] - 1;
-						this.ListView.SelectedIndices.Clear();//Убираю все выделенные элементы (Нам надо показывать один новый найденный, а не выбранные)
+						this.ListView.SelectedIndices.Clear();//Remove all selected elements (We need to show one new found one, not the selected ones)
 					} else
 						rowIndex = this.ListView.Items.Count - 1;
 
@@ -588,7 +588,7 @@ namespace AlphaOmega.Windows.Forms
 									root.Parent.Expand();
 								return true;
 							} else if(this.FindLastCellRec(text, root))
-								return true;//Поиск соответсвующих узлов в соседних узлах.
+								return true;//Search for matching nodes in neighboring nodes.
 						} while(root != null);
 					}
 				}
@@ -596,11 +596,11 @@ namespace AlphaOmega.Windows.Forms
 			return false;
 		}
 
-		/// <summary>Подсветить найденные ячейки</summary>
-		/// <remarks>Возможно, колонка будет не текстовая, но тогда не возможно определить пользоватьельские колонки</remarks>
-		/// <param name="text">Текст для поиска в ячейках</param>
-		/// <param name="matchCase">Соответствовать регистру</param>
-		/// <returns>Успех нахождения хоть одной записи</returns>
+		/// <summary>Highlight all matching cells</summary>
+		/// <remarks>Column might be non-text; then user columns cannot be determined</remarks>
+		/// <param name="text">Text to search in cells</param>
+		/// <param name="matchCase">Match case</param>
+		/// <returns>True if at least one match found</returns>
 		private Boolean ColorizeFounded(String text)
 		{
 			Boolean result = false, isSearchEmpty = String.IsNullOrEmpty(text);
@@ -673,16 +673,16 @@ namespace AlphaOmega.Windows.Forms
 			return result;
 		}
 
-		/// <summary>Поиск в ячейке текста</summary>
-		/// <param name="cell">Ячейка, в которой осуществлять поиск текста</param>
-		/// <param name="text">Текст для поиска в ячейке</param>
-		/// <param name="matchCase">Соответствовать регистру</param>
-		/// <returns>Текст в ячейке найден</returns>
+		/// <summary>Search text inside a cell value</summary>
+		/// <param name="cell">Cell value</param>
+		/// <param name="text">Text to search</param>
+		/// <param name="matchCase">Match case</param>
+		/// <returns>True if found</returns>
 		private Boolean FindInCell(Object cellText, String text)
 			=> cellText != null
 				&& cellText.ToString().IndexOf(text, cbCase.Checked ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase) > -1;
 
-		/// <summary>Отчистить подсветку таблицы</summary>
+		/// <summary>Clear highlight from grid/list/tree</summary>
 		private void ClearColorize()
 		{
 			if(this.DataGrid != null)
@@ -706,18 +706,18 @@ namespace AlphaOmega.Windows.Forms
 				{
 					if(node.BackColor == SearchGrid.FoundBackColor)
 						node.BackColor = Color.Empty;
-					this.ClearColorizeRec(node);
+					ClearColorizeRec(node);
 				}
 			}
-		}
 
-		private void ClearColorizeRec(TreeNode root)
-		{
-			foreach(TreeNode node in root.Nodes)
+			void ClearColorizeRec(TreeNode root)
 			{
-				if(node.BackColor == SearchGrid.FoundBackColor)
-					node.BackColor = Color.Empty;
-				this.ClearColorizeRec(node);
+				foreach(TreeNode node in root.Nodes)
+				{
+					if(node.BackColor == SearchGrid.FoundBackColor)
+						node.BackColor = Color.Empty;
+					ClearColorizeRec(node);
+				}
 			}
 		}
 

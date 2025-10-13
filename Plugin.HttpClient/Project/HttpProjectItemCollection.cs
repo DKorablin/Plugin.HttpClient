@@ -1,31 +1,29 @@
-﻿using Plugin.HttpClient.Test;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Net;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
 namespace Plugin.HttpClient.Project
 {
-	/// <summary>Коллекция элементов для тестирования в проекте</summary>
+	/// <summary>Collection of items for testing in a project</summary>
 	[Serializable]
 	[DesignTimeVisible(false)]
 	public class HttpProjectItemCollection : ISerializable, IEnumerable<HttpProjectItem>
 	{
 		#region Fields
-		/// <summary>Запросы удалённого сервера для тестирования</summary>
+		/// <summary>Remote server requests for testing</summary>
 		[NonSerialized]
 		private readonly List<HttpProjectItem> _items;
 
 		[NonSerialized]
-		private HttpProject _project;
+		private HttpProject _project; // Back reference to owning project
 		#endregion Fields
 
 		#region Properties
-		/// <summary>Проект к которому относится эта коллекция</summary>
+		/// <summary>Project to which this collection belongs</summary>
 		public HttpProject Project
 		{
 			get => this._project;
@@ -37,23 +35,23 @@ namespace Plugin.HttpClient.Project
 			}
 		}
 
-		/// <summary>Количество элементов тестирования в коллекции</summary>
+		/// <summary>Number of test items in the collection</summary>
 		public Int32 Count => this._items.Count;
 		#endregion Properties
 
 		#region Methods
-		/// <summary>Создание пустого конструктора с указанием пустого массива коллекции</summary>
+		/// <summary>Create empty collection</summary>
 		public HttpProjectItemCollection()
 			=> this._items = new List<HttpProjectItem>();
 
-		/// <summary>Создание коллекции с указанием проекта к которому принадлежит коллекция</summary>
-		/// <param name="project">Проект к которому принадлежит коллекция</param>
+		/// <summary>Create collection specifying the project it belongs to</summary>
+		/// <param name="project">Project that owns the collection</param>
 		public HttpProjectItemCollection(HttpProject project)
 			: this()
 			=> this.Project = project;
 
-		/// <summary>Сериализационный конструктор</summary>
-		/// <param name="info">Информция по сериализации</param>
+		/// <summary>Serialization constructor</summary>
+		/// <param name="info">Serialization info</param>
 		/// <param name="context">Stream</param>
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		private HttpProjectItemCollection(SerializationInfo info, StreamingContext context)
@@ -71,8 +69,8 @@ namespace Plugin.HttpClient.Project
 				}
 		}
 
-		/// <summary>Запись в сериализованный поток элементов коллекции под определённым идентификатором</summary>
-		/// <param name="info">Информация по сериализации</param>
+		/// <summary>Write collection items to serialized stream under a specific identifier</summary>
+		/// <param name="info">Serialization info</param>
 		/// <param name="context">Stream</param>
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -81,9 +79,9 @@ namespace Plugin.HttpClient.Project
 				info.AddValue("I", this._items.ToArray());
 		}
 
-		/// <summary>Добавить новый адрес для стресстеста</summary>
-		/// <param name="address">Ссылка на ресурс для проверки</param>
-		/// <returns>Элемент проекта</returns>
+		/// <summary>Add new address for stress test</summary>
+		/// <param name="address">Resource URL to test</param>
+		/// <returns>Project item</returns>
 		public HttpProjectItem Add(String address)
 		{
 			if(String.IsNullOrEmpty(address))
@@ -91,13 +89,13 @@ namespace Plugin.HttpClient.Project
 
 			HttpProjectItem result = new HttpProjectItem();
 			this.Add(result);
-			result.Address = address;//HACK: Project проставляется только в методе this.Add(HttpProjectItem)
+			result.Address = address;//HACK: Project is set only in the this.Add(HttpProjectItem) method
 
 			return result;
 		}
 
-		/// <summary>Добавить элемент в очередь текущего узла</summary>
-		/// <param name="item">Элемент теста для добавления в очередь текущего уровня</param>
+		/// <summary>Add item to current node queue</summary>
+		/// <param name="item">Test item to add to current level queue</param>
 		public void Add(HttpProjectItem item)
 		{
 			_ = item ?? throw new ArgumentNullException(nameof(item));
@@ -106,9 +104,9 @@ namespace Plugin.HttpClient.Project
 			this._items.Add(item);
 		}
 
-		/// <summary>Добавить элемент в определённое место очереди</summary>
-		/// <param name="item">Элемент для добавления в определённое место очереди</param>
-		/// <param name="itemIndex">Индекс очереди</param>
+		/// <summary>Insert item at a specific position in the queue</summary>
+		/// <param name="item">Item to insert</param>
+		/// <param name="itemIndex">Queue index</param>
 		public void Insert(HttpProjectItem item, Int32 itemIndex)
 		{
 			_ = item ?? throw new ArgumentNullException(nameof(item));
@@ -132,7 +130,7 @@ namespace Plugin.HttpClient.Project
 
 			Int32 index = this._items.IndexOf(target);
 			if(index == -1)
-				throw new ArgumentException($"Item {target.Address} not found");
+				throw new ArgumentException($"Item {target.Address} not found in the list of Items", nameof(target));
 
 			if(isAfter)
 				this._items.Insert(index + 1, itemToInsert);
@@ -140,9 +138,9 @@ namespace Plugin.HttpClient.Project
 				this._items.Insert(index, itemToInsert);
 		}
 
-		/// <summary>Проверка на существование элемента в коллекции</summary>
-		/// <param name="item">Проверка на присутсвия этого элемента в коллекции</param>
-		/// <returns>Элемент присутсвует в коллекции</returns>
+		/// <summary>Check if item exists in collection</summary>
+		/// <param name="item">Item to check presence of</param>
+		/// <returns>Item present in collection</returns>
 		public Boolean Contains(HttpProjectItem item)
 		{
 			_ = item ?? throw new ArgumentNullException(nameof(item));
@@ -150,9 +148,9 @@ namespace Plugin.HttpClient.Project
 			return this._items.Contains(item);
 		}
 
-		/// <summary>Удалить элемент проекта</summary>
-		/// <param name="item">Элемент проекта для удаления</param>
-		/// <returns>Результат удаления элемента из массива</returns>
+		/// <summary>Remove project item</summary>
+		/// <param name="item">Project item to remove</param>
+		/// <returns>Result of removal from list</returns>
 		public Boolean Remove(HttpProjectItem item)
 		{
 			_ = item ?? throw new ArgumentNullException(nameof(item));
@@ -171,18 +169,18 @@ namespace Plugin.HttpClient.Project
 			return result;
 		}
 
-		/// <summary>Передвинуть элемент на определённую позицию в списке</summary>
-		/// <param name="newParentItem">Новый родитель для передвигания элемента</param>
-		/// <param name="item">Элемент проекта для передвигания</param>
-		/// <param name="index">Индекс куда передвинуть элемент</param>
-		/// <exception cref="ArgumentNullException"><c>item</c> равен null</exception>
-		/// <exception cref="NotImplementedException">Движение узла из одного проекта в другой - не реализовано</exception>
+		/// <summary>Move item to a specific position in the list</summary>
+		/// <param name="newParentItem">New parent item to move under (null to move to root)</param>
+		/// <param name="item">Project item to move</param>
+		/// <param name="index">Index to move to</param>
+		/// <exception cref="ArgumentNullException"><c>item</c> is null</exception>
+		/// <exception cref="NotImplementedException">Moving node between different projects is not implemented</exception>
 		public void Move(HttpProjectItem newParentItem, HttpProjectItem item, Int32 index)
 		{
 			_ = item ?? throw new ArgumentNullException(nameof(item));
 
-			//TODO: Эсли переносимый элемент из другого процесса, то удалить его из коллекции не получится
-			//TODO: Проверить переносимость дочерних элементов элемента
+			//TODO: If movable item is from another process then removal from collection will not work
+			//TODO: Verify movability of child elements
 			this.Remove(item);
 
 			if(newParentItem == null)
@@ -191,34 +189,34 @@ namespace Plugin.HttpClient.Project
 				newParentItem.Items.Insert(item, index);
 		}
 
-		/// <summary>Получить родительский тест</summary>
-		/// <param name="child">Дочерний тест родителя которого необходимо найти</param>
-		/// <returns>Родительский тест или null, если родитель не найден</returns>
+		/// <summary>Get parent test item</summary>
+		/// <param name="child">Child test whose parent to find</param>
+		/// <returns>Parent test or null if not found</returns>
 		public HttpProjectItem GetParent(HttpProjectItem child)
 		{
 			_ = child ?? throw new ArgumentNullException(nameof(child));
 
 			foreach(HttpProjectItem item in this._items)
 			{
-				HttpProjectItem result = this.GetParent(item, child);
+				HttpProjectItem result = GetParent(item, child);
 				if(result != null)
 					return result;
 			}
 			return null;
 		}
 
-		/// <summary>Рекурсивно поискать родительский элемент</summary>
-		/// <param name="parent">Родитель, который возвращается если он им является</param>
-		/// <param name="child">Дочерний элемент</param>
-		/// <returns>Родительский тест или null, если родитель не найден</returns>
-		private HttpProjectItem GetParent(HttpProjectItem parent, HttpProjectItem child)
+		/// <summary>Recursively search for parent item</summary>
+		/// <param name="parent">Candidate parent returned if it is the parent</param>
+		/// <param name="child">Child item</param>
+		/// <returns>Parent test or null if not found</returns>
+		private static HttpProjectItem GetParent(HttpProjectItem parent, HttpProjectItem child)
 		{
 			foreach(HttpProjectItem item in parent.Items)
 				if(item == child)
 					return parent;
 				else
 				{
-					HttpProjectItem result = item.Items.GetParent(item, child);
+					HttpProjectItem result = GetParent(item, child);
 					if(result != null)
 						return result;
 				}
@@ -238,6 +236,17 @@ namespace Plugin.HttpClient.Project
 			}
 		}
 
+		/// <summary>Search parent project item by child item.</summary>
+		/// <param name="child">Child item which parent to find</param>
+		/// <returns>Found parent item or null</returns>
+		/// <exception cref="ArgumentNullException">Child item is null</exception>
+		public HttpProjectItem FindParentByReference(HttpProjectItem child)
+		{
+			_ = child ?? throw new ArgumentNullException(nameof(child));
+
+			return this.Find(p => p.Items.Contains(child)).FirstOrDefault();
+		}
+
 		/// <summary>Search exact match all items in the project tree</summary>
 		/// <param name="search">Search template project item</param>
 		/// <param name="isRelativeSearch">Search host by relative part but not absolute</param>
@@ -248,20 +257,9 @@ namespace Plugin.HttpClient.Project
 			_ = search ?? throw new ArgumentNullException(nameof(search));
 
 			search.Items.Project = this._project;
-			search.Address = search.Address;//Применяю шаблоны текущего проекта к адресу
+			search.Address = search.Address;//Apply current project templates to address
 
 			return this.Find(p => p.Equals(search, isRelativeSearch));
-		}
-
-		/// <summary>Search parent project item by child item.</summary>
-		/// <param name="child">Child item which parent to find</param>
-		/// <returns>Found parent item or null</returns>
-		/// <exception cref="ArgumentNullException">Child item is null</exception>
-		public HttpProjectItem FindParentByReference(HttpProjectItem child)
-		{
-			_ = child ?? throw new ArgumentNullException(nameof(child));
-
-			return this.Find(p => p.Items.Contains(child)).FirstOrDefault();
 		}
 
 		public IEnumerable<HttpProjectItem> Find(Func<HttpProjectItem, Boolean> callback, IEnumerable<HttpProjectItem> items = null)
@@ -278,12 +276,15 @@ namespace Plugin.HttpClient.Project
 					yield return subItem;
 			}
 		}
-
+ 
+		/// <summary>Returns generic enumerator over root-level project items.</summary>
 		public IEnumerator<HttpProjectItem> GetEnumerator()
 			=> this._items.GetEnumerator();
 
+		/// <summary>Returns non-generic enumerator over root-level project items.</summary>
 		IEnumerator IEnumerable.GetEnumerator()
 			=> this.GetEnumerator();
+
 		#endregion Methods
 	}
 }

@@ -8,13 +8,13 @@ namespace Plugin.HttpClient.Test
 	{
 		public WebExceptionStatus StatusCode { get; }
 
-		public override String ResponseString { get; }
+		public override String ResponseBody { get; }
 
 		public ResultFailure(HttpItem item, HttpWebRequest request, WebException exc)
 			: base(item, request, null)
 		{
 			this.StatusCode = exc.Status;
-			this.ResponseString = exc.InnerException == null
+			this.ResponseBody = exc.InnerException == null
 				? exc.Message
 				: exc.InnerException.Message;
 

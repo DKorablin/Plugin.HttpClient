@@ -37,9 +37,9 @@ namespace Plugin.HttpClient.Server
 			this._ready = new ManualResetEvent(false);
 		}
 
-		/// <summary>Запустить сервер</summary>
-		/// <param name="hostUrl">Url сервера</param>
-		/// <param name="listenersCount">Кол-во обработчиков запросов с клиентов</param>
+		/// <summary>Start listener server</summary>
+		/// <param name="hostUrl">The host url that server should listen</param>
+		/// <param name="listenersCount">Number of client request handlers</param>
 		public void Start(String hostUrl)
 		{
 			if(this.ProcessRequest == null)
@@ -65,7 +65,7 @@ namespace Plugin.HttpClient.Server
 			this._listenerThread.Start();
 		}
 
-		/// <summary>Остановить сервер</summary>
+		/// <summary>Stops http listener server</summary>
 		public void Stop()
 		{
 			this._stop.Set();

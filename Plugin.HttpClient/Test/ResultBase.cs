@@ -14,7 +14,9 @@ namespace Plugin.HttpClient.Test
 
 		public virtual String ResponseHeaders { get; }
 
-		public virtual String ResponseString { get; }
+		public virtual String ResponseContentType { get; }
+
+		public virtual String ResponseBody { get; }
 
 		/// <summary>Elapsed time only set when using as client</summary>
 		public TimeSpan? Elapsed { get; set; }
@@ -23,19 +25,18 @@ namespace Plugin.HttpClient.Test
 		{//request can be null here (If exception related to request building logic)
 			this.Item = item;
 			this.ResponseHeaders = ResultBase.GetResponseHeaders(response);
-			this.ResponseString = ResultBase.GetResponseString(response);
+			this.ResponseContentType = response?.ContentType;
+			this.ResponseBody = ResultBase.GetResponseBody(response);
 		}
 
 		public ResultBase(HttpItem item, HttpListenerRequest request, HttpListenerResponse response)
-		{//TODO: Тут надо всё переписывать для логирования запросов
+		{//TODO: Here we need to rewrite everything to log requests
 			_ = request ?? throw new ArgumentNullException(nameof(request));
 
 			this.Item = new HttpProjectItem(request);
-
-			if(item != null)
-				this.ResponseString = item.Response;
-
 			this.ResponseHeaders = ResultBase.GetResponseHeaders(response);
+			this.ResponseContentType = response?.ContentType;
+			this.ResponseBody = item?.Response;
 			this.IsSuccess = true;
 		}
 
@@ -46,16 +47,14 @@ namespace Plugin.HttpClient.Test
 			this.IsSuccess = result.IsSuccess;
 			this.Item = result.Item;
 			this.ResponseHeaders = result.ResponseHeaders;
-			this.ResponseString= result.ResponseString;
+			this.ResponseBody = result.ResponseBody;
 			this.Elapsed = result.Elapsed;
 		}
 
 		public String GetResponseWithHeaders()
-		{
-			return this.ResponseHeaders != null || this.ResponseString != null
-				? String.Join(Environment.NewLine, new String[] { this.ResponseHeaders, this.ResponseString, })
+			=> this.ResponseHeaders != null || this.ResponseBody != null
+				? String.Join(Environment.NewLine, new String[] { this.ResponseHeaders, this.ResponseBody, })
 				: null;
-		}
 
 		private static String GetResponseHeaders(HttpWebResponse response)
 		{
@@ -79,7 +78,7 @@ namespace Plugin.HttpClient.Test
 			return String.Join(Environment.NewLine, new String[] { httpHeader, headers, });
 		}
 
-		private static String GetResponseString(HttpWebResponse response)
+		private static String GetResponseBody(HttpWebResponse response)
 		{
 			if(response == null)
 				return null;
@@ -89,7 +88,7 @@ namespace Plugin.HttpClient.Test
 			{
 				encoding = Encoding.GetEncoding(response.CharacterSet);
 			} catch(ArgumentException)
-			{//Не валидная кодировка
+			{//Invalid encoding
 			}
 
 			using(StreamReader reader = new StreamReader(response.GetResponseStream(), encoding))

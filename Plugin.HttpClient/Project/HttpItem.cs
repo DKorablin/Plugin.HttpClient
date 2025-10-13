@@ -67,7 +67,7 @@ namespace Plugin.HttpClient.Project
 		public String Address
 		{
 			get => this._address;
-			set => this.SetField(ref this._address, String.IsNullOrEmpty(value) ? null : value, nameof(Address));
+			set => this.SetField(ref this._address, String.IsNullOrEmpty(value) ? null : value, nameof(this.Address));
 		}
 
 		[Category("Request")]
@@ -77,7 +77,7 @@ namespace Plugin.HttpClient.Project
 		public String Method
 		{
 			get => this._method ?? "GET";
-			set => this.SetField(ref this._method, String.IsNullOrEmpty(value) || value.Equals("GET", StringComparison.InvariantCultureIgnoreCase) ? null : value, nameof(Method));
+			set => this.SetField(ref this._method, String.IsNullOrEmpty(value) || value.Equals("GET", StringComparison.InvariantCultureIgnoreCase) ? null : value, nameof(this.Method));
 		}
 
 		[Category("Request")]
@@ -87,7 +87,7 @@ namespace Plugin.HttpClient.Project
 		public Boolean AllowAutoRedirect
 		{
 			get => this._allowAutoRedirect;
-			set => this.SetField(ref this._allowAutoRedirect, value, nameof(AllowAutoRedirect));
+			set => this.SetField(ref this._allowAutoRedirect, value, nameof(this.AllowAutoRedirect));
 		}
 
 		[Category("Request")]
@@ -96,7 +96,7 @@ namespace Plugin.HttpClient.Project
 		public String Data
 		{
 			get => this._data;
-			set => this.SetField(ref this._data, String.IsNullOrEmpty(value) ? null : value, nameof(Data));
+			set => this.SetField(ref this._data, String.IsNullOrEmpty(value) ? null : value, nameof(this.Data));
 		}
 
 		[Category("Request")]
@@ -108,8 +108,8 @@ namespace Plugin.HttpClient.Project
 			set
 			{
 				if(value < 0 && value != System.Threading.Timeout.Infinite)
-					throw new ArgumentOutOfRangeException("The value specified is less than zero and is not Infinite.");
-				this.SetField(ref this._timeout, value, nameof(Timeout));
+					throw new ArgumentOutOfRangeException(nameof(value), "The value specified is less than zero and is not Infinite.");
+				this.SetField(ref this._timeout, value, nameof(this.Timeout));
 			}
 		}
 
@@ -122,8 +122,8 @@ namespace Plugin.HttpClient.Project
 			set
 			{
 				if(value <= 0 && value != System.Threading.Timeout.Infinite)
-					throw new ArgumentOutOfRangeException("The value specified for a set operation is less than or equal to zero and is not equal to Infinite");
-				this.SetField(ref this._readWriteTimeout, value, nameof(ReadWriteTimeout));
+					throw new ArgumentOutOfRangeException(nameof(value), "The value specified for a set operation is less than or equal to zero and is not equal to Infinite");
+				this.SetField(ref this._readWriteTimeout, value, nameof(this.ReadWriteTimeout));
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace Plugin.HttpClient.Project
 		public Boolean SendChunked
 		{
 			get => this._sendChunked;
-			set => this.SetField(ref this._sendChunked, value, nameof(SendChunked));
+			set => this.SetField(ref this._sendChunked, value, nameof(this.SendChunked));
 		}
 		#endregion Request
 
@@ -145,7 +145,7 @@ namespace Plugin.HttpClient.Project
 		public AuthorizationType AuthorizationType
 		{
 			get => this._authorizationType;
-			set => this.SetField(ref this._authorizationType, Enum.IsDefined(typeof(AuthorizationType), value) ? value : AuthorizationType.None, nameof(AuthorizationType));
+			set => this.SetField(ref this._authorizationType, Enum.IsDefined(typeof(AuthorizationType), value) ? value : AuthorizationType.None, nameof(this.AuthorizationType));
 		}
 
 		[Category("Credentials")]
@@ -154,16 +154,16 @@ namespace Plugin.HttpClient.Project
 		public String UserName
 		{
 			get => this._userName;
-			set => this.SetField(ref this._userName, String.IsNullOrEmpty(value) ? null : value, nameof(UserName));
+			set => this.SetField(ref this._userName, String.IsNullOrEmpty(value) ? null : value, nameof(this.UserName));
 		}
 
 		[Category("Credentials")]
 		//[PasswordPropertyText(true)]
-		[Description("Network passwor to access remote resource")]
+		[Description("Network password to access remote resource")]
 		public String Password
 		{
 			get => this._password;
-			set => this.SetField(ref this._password, String.IsNullOrEmpty(value) ? null : value, nameof(Password));
+			set => this.SetField(ref this._password, String.IsNullOrEmpty(value) ? null : value, nameof(this.Password));
 		}
 
 		[Category("Credentials")]
@@ -175,14 +175,14 @@ namespace Plugin.HttpClient.Project
 			set
 			{
 				if(value == null || value.Length == 0)
-					this.SetField(ref this._clientCertificates, null, nameof(ClientCertificates));
+					this.SetField(ref this._clientCertificates, null, nameof(this.ClientCertificates));
 				else
 				{
 					foreach(String path in value)
 						if(!File.Exists(path))
 							throw new FileNotFoundException("Certificate file not found", path);
 
-					this.SetField(ref this._clientCertificates, value, nameof(ClientCertificates));
+					this.SetField(ref this._clientCertificates, value, nameof(this.ClientCertificates));
 				}
 			}
 		}
@@ -195,7 +195,7 @@ namespace Plugin.HttpClient.Project
 		public String ProxyAddress
 		{
 			get => this._proxyAddress;
-			set => this.SetField(ref this._proxyAddress, String.IsNullOrEmpty(value) ? null : value, nameof(ProxyAddress));
+			set => this.SetField(ref this._proxyAddress, String.IsNullOrEmpty(value) ? null : value, nameof(this.ProxyAddress));
 		}
 
 		[Category("Proxy")]
@@ -204,7 +204,7 @@ namespace Plugin.HttpClient.Project
 		public String ProxyDomain
 		{
 			get => this._proxyDomain;
-			set => this.SetField(ref this._proxyDomain, String.IsNullOrEmpty(value) ? null : value, nameof(ProxyDomain));
+			set => this.SetField(ref this._proxyDomain, String.IsNullOrEmpty(value) ? null : value, nameof(this.ProxyDomain));
 		}
 
 		[Category("Proxy")]
@@ -213,7 +213,7 @@ namespace Plugin.HttpClient.Project
 		public String ProxyUserName
 		{
 			get => this._proxyUserName;
-			set => this.SetField(ref this._proxyUserName, String.IsNullOrEmpty(value) ? null : value, nameof(ProxyUserName));
+			set => this.SetField(ref this._proxyUserName, String.IsNullOrEmpty(value) ? null : value, nameof(this.ProxyUserName));
 		}
 
 		[Category("Proxy")]
@@ -222,7 +222,7 @@ namespace Plugin.HttpClient.Project
 		public String ProxyPassword
 		{
 			get => this._proxyPassword;
-			set => this.SetField(ref this._proxyPassword, String.IsNullOrEmpty(value) ? null : value, nameof(ProxyPassword));
+			set => this.SetField(ref this._proxyPassword, String.IsNullOrEmpty(value) ? null : value, nameof(this.ProxyPassword));
 		}
 
 		[Category("Proxy")]
@@ -232,7 +232,7 @@ namespace Plugin.HttpClient.Project
 		public Boolean UseDefaultProxyCredentials
 		{
 			get => this._useDefaultProxyCredentials;
-			set => this.SetField(ref this._useDefaultProxyCredentials, value, nameof(UseDefaultProxyCredentials));
+			set => this.SetField(ref this._useDefaultProxyCredentials, value, nameof(this.UseDefaultProxyCredentials));
 		}
 
 		[Category("Proxy")]
@@ -241,7 +241,7 @@ namespace Plugin.HttpClient.Project
 		public String[] ProxyBypassList
 		{
 			get => this._proxyBypassList;
-			set => this.SetField(ref this._proxyBypassList, value == null || value.Length == 0 ? null : value, nameof(ProxyBypassList));
+			set => this.SetField(ref this._proxyBypassList, value == null || value.Length == 0 ? null : value, nameof(this.ProxyBypassList));
 		}
 		#endregion Proxy
 
@@ -251,7 +251,7 @@ namespace Plugin.HttpClient.Project
 		public String Accept
 		{
 			get => this._accept;
-			set => this.SetField(ref this._accept, String.IsNullOrEmpty(value) ? null : value, nameof(Accept));
+			set => this.SetField(ref this._accept, String.IsNullOrEmpty(value) ? null : value, nameof(this.Accept));
 		}
 
 		[Category("Headers")]
@@ -260,7 +260,7 @@ namespace Plugin.HttpClient.Project
 		public String Connection
 		{
 			get => this._connection;
-			set => this.SetField(ref this._connection, String.IsNullOrEmpty(value) ? null : value, nameof(Connection));
+			set => this.SetField(ref this._connection, String.IsNullOrEmpty(value) ? null : value, nameof(this.Connection));
 		}
 
 		[Category("Headers")]
@@ -270,7 +270,7 @@ namespace Plugin.HttpClient.Project
 		public String ContentType
 		{
 			get => this._contentType;
-			set => this.SetField(ref this._contentType, String.IsNullOrEmpty(value) ? null : value, nameof(ContentType));
+			set => this.SetField(ref this._contentType, String.IsNullOrEmpty(value) ? null : value, nameof(this.ContentType));
 		}
 
 		[Category("Headers")]
@@ -280,7 +280,7 @@ namespace Plugin.HttpClient.Project
 		public Int64? ContentLength
 		{//We should check this property manually because HttpWebRequest uses -1 to identify field as null value but if we try to set -1 as value we will receive exception
 			get => this._contentLength;
-			set => this.SetField(ref this._contentLength, value, nameof(ContentLength));
+			set => this.SetField(ref this._contentLength, value, nameof(this.ContentLength));
 		}
 
 		[Category("Headers")]
@@ -289,15 +289,15 @@ namespace Plugin.HttpClient.Project
 		public String Expect
 		{
 			get => this._expect;
-			set => this.SetField(ref this._expect, String.IsNullOrEmpty(value) ? null : value, nameof(Expect));
+			set => this.SetField(ref this._expect, String.IsNullOrEmpty(value) ? null : value, nameof(this.Expect));
 		}
 
 		[Category("Headers")]
-		[Description("Gets or sets the value of the Referer HTTP header")]
+		[Description("Gets or sets the value of the Referrer HTTP header")]
 		public String Referer
 		{
 			get => this._referer;
-			set => this.SetField(ref this._referer, String.IsNullOrEmpty(value) ? null : value, nameof(Referer));
+			set => this.SetField(ref this._referer, String.IsNullOrEmpty(value) ? null : value, nameof(this.Referer));
 		}
 
 		[Category("Headers")]
@@ -306,7 +306,7 @@ namespace Plugin.HttpClient.Project
 		public String[] CustomHeaders
 		{
 			get => this._customHeaders;
-			set => this.SetField(ref this._customHeaders, value == null || value.Length == 0 ? null : value, nameof(CustomHeaders));
+			set => this.SetField(ref this._customHeaders, value == null || value.Length == 0 ? null : value, nameof(this.CustomHeaders));
 		}
 
 		[Category("Headers")]
@@ -316,7 +316,7 @@ namespace Plugin.HttpClient.Project
 		public String TransferEncoding
 		{
 			get => this._transferEncoding;
-			set => this.SetField(ref this._transferEncoding, String.IsNullOrEmpty(value) ? null : value, nameof(TransferEncoding));
+			set => this.SetField(ref this._transferEncoding, String.IsNullOrEmpty(value) ? null : value, nameof(this.TransferEncoding));
 		}
 
 		[Category("Headers")]
@@ -326,7 +326,7 @@ namespace Plugin.HttpClient.Project
 		public String UserAgent
 		{//TODO: The value for this property is stored in WebHeaderCollection. If WebHeaderCollection is set, the property value is lost
 			get => this._userAgent;
-			set => this.SetField(ref this._userAgent, String.IsNullOrEmpty(value) ? null : value, nameof(UserAgent));
+			set => this.SetField(ref this._userAgent, String.IsNullOrEmpty(value) ? null : value, nameof(this.UserAgent));
 		}
 
 		[Category("Headers")]
@@ -335,7 +335,7 @@ namespace Plugin.HttpClient.Project
 		public String Host
 		{
 			get => this._host;
-			set => this.SetField(ref this._host, String.IsNullOrEmpty(value) ? null : value, nameof(Host));
+			set => this.SetField(ref this._host, String.IsNullOrEmpty(value) ? null : value, nameof(this.Host));
 		}
 		#endregion Headers
 
@@ -348,7 +348,7 @@ namespace Plugin.HttpClient.Project
 		public HttpStatusCode ResponseStatus
 		{
 			get => this._resultStatus;
-			set => this.SetField(ref this._resultStatus, value, nameof(ResponseStatus));
+			set => this.SetField(ref this._resultStatus, value, nameof(this.ResponseStatus));
 		}
 
 		[Category("Response")]
@@ -357,7 +357,7 @@ namespace Plugin.HttpClient.Project
 		public String Response
 		{
 			get => this._response;
-			set => this.SetField(ref this._response, value, nameof(Response));
+			set => this.SetField(ref this._response, value, nameof(this.Response));
 		}
 		#endregion Response
 
@@ -367,7 +367,7 @@ namespace Plugin.HttpClient.Project
 		public String Description
 		{
 			get => this._description;
-			set => this.SetField(ref this._description, String.IsNullOrEmpty(value) ? null : value, nameof(Description));
+			set => this.SetField(ref this._description, String.IsNullOrEmpty(value) ? null : value, nameof(this.Description));
 		}
 		#endregion Properties
 

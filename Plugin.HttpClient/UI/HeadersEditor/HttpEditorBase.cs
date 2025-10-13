@@ -14,11 +14,11 @@ namespace Plugin.HttpClient.UI
 		public abstract IEnumerable<KeyValuePair<String, String>> GetValues();
 
 		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
-			=> UITypeEditorEditStyle.DropDown; //base.GetEditStyle(context);
+			=> UITypeEditorEditStyle.DropDown;
 
 		public override Object EditValue(ITypeDescriptorContext context, IServiceProvider provider, Object value)
 		{
-			_editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+			this._editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
 
 			// use a list box
 			ListBox lb = new ListBox
@@ -27,7 +27,7 @@ namespace Plugin.HttpClient.UI
 				DisplayMember = "Key",
 				ValueMember = "Value",
 			};
-			lb.SelectedValueChanged += OnListBoxSelectedValueChanged;
+			lb.SelectedValueChanged += (sender, e) => this._editorService.CloseDropDown();// close the drop down as soon as something is clicked
 
 			//context.Instance
 			foreach(KeyValuePair<String, String> item in this.GetValues())
@@ -38,13 +38,10 @@ namespace Plugin.HttpClient.UI
 			}
 
 			// show this model stuff
-			_editorService.DropDownControl(lb);
+			this._editorService.DropDownControl(lb);
 			return lb.SelectedItem == null
 				? value // no selection, return the passed-in value as is
 				: ((KeyValuePair<String, String>)lb.SelectedItem).Value;
 		}
-
-		private void OnListBoxSelectedValueChanged(Object sender, EventArgs e)
-			=> _editorService.CloseDropDown();// close the drop down as soon as something is clicked
 	}
 }

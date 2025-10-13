@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Windows.Forms;
 using Plugin.HttpClient.Events;
 using Plugin.HttpClient.History;
 using Plugin.HttpClient.Project;
@@ -34,13 +33,13 @@ namespace Plugin.HttpClient
 
 		internal IHostWindows HostWindows { get; }
 
-		/// <summary>История вызова HTTP запросов</summary>
+		/// <summary>HTTP Request Call History</summary>
 		internal HistoryController History { get; } = new HistoryController();
 
-		/// <summary>Настройки для взаимодействия из хоста</summary>
+		/// <summary>Settings for interaction from the host</summary>
 		Object IPluginSettings.Settings => this.Settings;
 
-		/// <summary>Настройки для взаимодействия из плагина</summary>
+		/// <summary>Settings for interaction from the plugin</summary>
 		public PluginSettings Settings
 		{
 			get
@@ -143,13 +142,13 @@ namespace Plugin.HttpClient
 		internal void ProjectClosed(String projectFileName)
 			=> this.OnProjectClosed?.Invoke(this, new ProjectClosedEventArgs(projectFileName));
 
-		/// <summary>Triggers OnToggleprojectDirty event to notify that project is changed elswhere</summary>
+		/// <summary>Triggers OnToggleProjectDirty event to notify that project is changed elsewhere</summary>
 		/// <param name="projectFilePath">The project file path that was marked as changed</param>
 		/// <param name="isDirty">Project was changed and can be saved</param>
 		internal void ToggleProjectDirty(String projectFilePath, Boolean isDirty)
 			=> this.OnToggleProjectDirty?.Invoke(this, new ToggleProjectDirtyEventArgs(projectFilePath, isDirty));
 
-		/// <summary>Search for project to attach to when editing tempate items</summary>
+		/// <summary>Search for project to attach to when editing template items</summary>
 		/// <param name="projectFileName">The project file name to search for</param>
 		/// <returns>Found project instance or null if project not found</returns>
 		internal HttpProject SearchForProject(String projectFileName)
@@ -167,7 +166,7 @@ namespace Plugin.HttpClient
 		/// <summary>Search for project item if we receive request from web server</summary>
 		/// <param name="tempate">Search request template</param>
 		/// <returns>Array of found items</returns>
-		internal IEnumerable<Project.HttpProjectItem> SearchForProjectItems(Project.HttpProjectItem tempate)
+		internal IEnumerable<Project.HttpProjectItem> SearchForProjectItems(Project.HttpProjectItem template)
 		{
 			//Added to avoid single project enumeration
 			HashSet<Project.HttpProjectItem> hash = new HashSet<Project.HttpProjectItem>();
@@ -175,7 +174,7 @@ namespace Plugin.HttpClient
 			EventHandler<SearchProjectItemEventArgs> evt = this.OnSearchForProjectItems;
 			if(evt != null)
 			{
-				SearchProjectItemEventArgs args = new SearchProjectItemEventArgs(tempate);
+				SearchProjectItemEventArgs args = new SearchProjectItemEventArgs(template);
 				evt(this, args);
 				foreach(Project.HttpProjectItem item in args.Found)
 					if(hash.Add(item))
@@ -183,7 +182,7 @@ namespace Plugin.HttpClient
 			}
 
 			Project.HttpProject project = this.Settings.LoadProject();
-			foreach(Project.HttpProjectItem item in project.Items.Find(tempate, this.Settings.ServerSearchRelativeUrl))
+			foreach(Project.HttpProjectItem item in project.Items.Find(template, this.Settings.ServerSearchRelativeUrl))
 				if(hash.Add(item))
 					yield return item;
 		}
@@ -201,7 +200,7 @@ namespace Plugin.HttpClient
 			}
 		}
 
-		internal Icon GetApplicationIcon()
+		internal static Icon GetApplicationIcon()
 		{
 			return Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName);
 			//FIX: .NET 7 opened forms icon returns not icon but png image that should be converted (Also it could be not application icon but one of the forms icon)

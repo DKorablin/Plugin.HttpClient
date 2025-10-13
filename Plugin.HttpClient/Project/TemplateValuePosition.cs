@@ -8,7 +8,7 @@ namespace Plugin.HttpClient.Project
 		public Int32 Index { get; set; }
 
 		/// <summary>Create instance of <see cref="TemplateValuePosition"/> with all required fields</summary>
-		/// <param name="key">Found tempate item key</param>
+		/// <param name="key">Found template item key</param>
 		/// <param name="value">Parsed value on the key position</param>
 		/// <param name="index">String index where the template item found</param>
 		public TemplateValuePosition(String key, String value, Int32 index)

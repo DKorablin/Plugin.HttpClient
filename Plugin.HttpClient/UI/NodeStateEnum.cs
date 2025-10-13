@@ -1,21 +1,21 @@
 ﻿namespace Plugin.HttpClient.UI
 {
-	/// <summary>Изображение узлов дерева</summary>
+	/// <summary>Tree node visual state</summary>
 	internal enum NodeStateEnum
 	{
-		/// <summary>Новый узел по которому ещё тест ещё не произведён</summary>
+		/// <summary>New node that has not been tested yet</summary>
 		New = 0,
-		/// <summary>В работе</summary>
+		/// <summary>Test currently running</summary>
 		Running = 1,
-		/// <summary>Тест закончился удачей</summary>
+		/// <summary>Test finished successfully</summary>
 		Success = 2,
-		/// <summary>Тест провален</summary>
+		/// <summary>Test failed</summary>
 		Failure = 3,
-		/// <summary>Тест провален. Запрещено</summary>
+		/// <summary>Test failed: forbidden (HTTP 403 or similar)</summary>
 		FailureForbidden = 4,
-		/// <summary>Папки в тестах не реализованы</summary>
+		/// <summary>Folder placeholder (tests folders not implemented)</summary>
 		Folder = 5,
-		/// <summary>Пропуск теста при запуске тестирования потока или всех URL'ов</summary>
+		/// <summary>Skip this test when running batch or all URLs</summary>
 		Skip = 6,
 	}
 }

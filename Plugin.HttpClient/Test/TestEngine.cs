@@ -31,7 +31,7 @@ namespace Plugin.HttpClient.Test
 			}
 		}
 
-		private Boolean InvokeTest(RequestTest test, Func<Boolean> isChancelled)
+		private Boolean InvokeTest(RequestTest test, Func<Boolean> isCancelled)
 		{
 			test.Item.Image = NodeStateEnum.Running;
 			this.OnTestChanged?.Invoke(this, new TestProgressChangedArgs(test.Item));
@@ -54,12 +54,12 @@ namespace Plugin.HttpClient.Test
 					throw new NotImplementedException("Validation result is not implemented. Type: " + resultV.GetType());
 			}//Here could be other type of results. For example ResultFailure
 
-			//Успешное завершение тестирования
+			//Successful completion of testing
 			test.Item.Image = status;
-			test.Item.HttpResponse = test.Result.GetResponseWithHeaders();
+			test.Item.LastResponse = new HttpItemResponse(test.Result);
 			this.OnTestChanged?.Invoke(this, new TestProgressChangedArgs(test));
 
-			Boolean isNotCancelled = !isChancelled();
+			Boolean isNotCancelled = !isCancelled();
 			Boolean isNotFailure = status != NodeStateEnum.Failure;
 			Boolean isNotStopOnError = !this._args.Plugin.Settings.StopOnError;
 			return isNotCancelled

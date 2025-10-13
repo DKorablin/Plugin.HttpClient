@@ -16,11 +16,11 @@ namespace Plugin.HttpClient
 			}
 			public static class WebApi
 			{
-				public static String[] RoutePrefixAttributes = new String[] { "System.Web.Http.RoutePrefixAttribute", "Microsoft.AspNetCore.Mvc.RouteAttribute", };
+				public static readonly String[] RoutePrefixAttributes = new String[] { "System.Web.Http.RoutePrefixAttribute", "Microsoft.AspNetCore.Mvc.RouteAttribute", };
 				public const String MethodRouteAttribute = "System.Web.Http.RouteAttribute";
 				public const String ResponseType = "System.Web.Http.Description.ResponseTypeAttribute";
 
-				public static Dictionary<String, String> HttpMethods = new Dictionary<String, String>()
+				public static readonly Dictionary<String, String> HttpMethods = new Dictionary<String, String>()
 				{
 					{"System.Web.Http.HttpDeleteAttribute","DELETE"},
 					{"System.Web.Http.HttpGetAttribute","GET"},
@@ -59,13 +59,13 @@ namespace Plugin.HttpClient
 
 		public static class Http
 		{
-			public static Dictionary<String, String> TransferEncoding = new Dictionary<String, String> { { "chunked", "chunked" }, { "compress", "compress" }, { "deflate", "deflate" }, { "gzip", "gzip" }, { "identity", "identity" }, };
+			public static readonly Dictionary<String, String> TransferEncoding = new Dictionary<String, String> { { "chunked", "chunked" }, { "compress", "compress" }, { "deflate", "deflate" }, { "gzip", "gzip" }, { "identity", "identity" }, };
 
-			public static Dictionary<String, String> Methods = new Dictionary<String, String> { { "GET", "GET" }, { "HEAD", "HEAD" }, { "POST", "POST" }, { "PUT", "PUT" }, { "DELETE", "DELETE" }, { "CONNECT", "CONNECT" }, { "OPTIONS", "OPTIONS" }, { "TRACE", "TRACE" }, { "PATCH", "PATCH" }, };
+			public static readonly Dictionary<String, String> Methods = new Dictionary<String, String> { { "GET", "GET" }, { "HEAD", "HEAD" }, { "POST", "POST" }, { "PUT", "PUT" }, { "DELETE", "DELETE" }, { "CONNECT", "CONNECT" }, { "OPTIONS", "OPTIONS" }, { "TRACE", "TRACE" }, { "PATCH", "PATCH" }, };
 
-			public static Dictionary<String, String> Expect = new Dictionary<String, String> { { "100-continue", "100-continue" } };
+			public static readonly Dictionary<String, String> Expect = new Dictionary<String, String> { { "100-continue", "100-continue" } };
 
-			public static Dictionary<String, String> ContentTypes = new Dictionary<String, String>
+			public static readonly Dictionary<String, String> ContentTypes = new Dictionary<String, String>
 			{
 				{ "application/json", "application/json" },
 				{ "application/x-www-form-urlencoded", "application/x-www-form-urlencoded" },
@@ -74,9 +74,9 @@ namespace Plugin.HttpClient
 				{ "text/xml", "text/xml" },
 			};
 
-			public static Dictionary<String, String> Connection = new Dictionary<String, String> { { "keep-alive", "keep-alive" }, { "close", "close" }, };
+			public static readonly Dictionary<String, String> Connection = new Dictionary<String, String> { { "keep-alive", "keep-alive" }, { "close", "close" }, };
 
-			public static Dictionary<String, String> UserAgents = new Dictionary<String, String>() {
+			public static readonly Dictionary<String, String> UserAgents = new Dictionary<String, String>() {
 			//Android Mobile User Agents
 			{"Samsung Galaxy S9","Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36"},
 			{"Samsung Galaxy S8","Mozilla/5.0 (Linux; Android 7.0; SM-G892A Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/60.0.3112.107 Mobile Safari/537.36"},

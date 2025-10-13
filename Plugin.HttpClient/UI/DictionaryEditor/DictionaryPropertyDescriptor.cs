@@ -6,8 +6,8 @@ namespace Plugin.HttpClient.UI
 {
 	class DictionaryPropertyDescriptor : PropertyDescriptor
 	{
-		private IDictionary _dictionary;
-		private Object _key;
+		private readonly IDictionary _dictionary;
+		private readonly Object _key;
 
 		internal DictionaryPropertyDescriptor(IDictionary d, Object key)
 			: base(key.ToString(), null)
@@ -16,34 +16,26 @@ namespace Plugin.HttpClient.UI
 			this._key = key;
 		}
 
-		public override Type PropertyType { get { return _dictionary[_key].GetType(); } }
+		public override Type PropertyType { get => this._dictionary[_key].GetType(); }
 
 		public override void SetValue(Object component, Object value)
-		{
-			_dictionary[_key] = value;
-		}
+			=> this._dictionary[_key] = value;
 
 		public override Object GetValue(Object component)
-		{
-			return _dictionary[_key];
-		}
+			=> this._dictionary[_key];
 
-		public override Boolean IsReadOnly { get { return false; } }
+		public override Boolean IsReadOnly { get => false; }
 
-		public override Type ComponentType { get { return null; } }
+		public override Type ComponentType { get => null; }
 
 		public override Boolean CanResetValue(Object component)
-		{
-			return false;
-		}
+			=> false;
 
 		public override void ResetValue(Object component)
 		{
 		}
 
 		public override Boolean ShouldSerializeValue(Object component)
-		{
-			return false;
-		}
+			=> false;
 	}
 }

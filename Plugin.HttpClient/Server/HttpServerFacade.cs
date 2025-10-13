@@ -57,11 +57,7 @@ namespace Plugin.HttpClient.Server
 				default:
 					throw;
 				}
-			}/* catch(System.ServiceModel.AddressAccessDeniedException exc)
-			{
-				CheckAdministratorAccess(serverUrl, exc);
-				throw;
-			}*/
+			}
 		}
 
 		/// <summary>Stop server</summary>
@@ -86,20 +82,33 @@ namespace Plugin.HttpClient.Server
 		{
 			using(HttpListenerResponse response = context.Response)
 			{
-				Boolean isFound =  this.SendResponse(context, response);
+				Boolean isFound = this.SendResponse(context, response);
 				if(!isFound && response.StatusCode == (Int32)HttpStatusCode.NotFound)
 				{
 					switch(context.Request.Url.PathAndQuery)
 					{
 					case "/favicon.ico":
-						Byte[] icon = this.GetProcessIcon();
+						Byte[] icon = GetProcessIcon();
 						if(icon != null)
 						{
 							response.StatusCode = (Int32)HttpStatusCode.OK;
-							this.WriteToResponseStream(response, icon);
+							WriteToResponseStream(response, icon);
 						}
 						break;
 					}
+				}
+			}
+
+			Byte[] GetProcessIcon()
+			{
+				Icon ico = PluginWindows.GetApplicationIcon();
+				if(ico == null)
+					return null;
+
+				using(MemoryStream stream = new MemoryStream())
+				{
+					ico.Save(stream);
+					return stream.ToArray();
 				}
 			}
 		}
@@ -129,7 +138,7 @@ namespace Plugin.HttpClient.Server
 						if(response.ContentEncoding == null)
 							response.ContentEncoding = request.ContentEncoding;
 
-						this.WriteToResponseStream(response, item.ResponseReal);
+						WriteToResponseStream(response, item.ResponseReal);
 					}
 				}
 
@@ -141,7 +150,7 @@ namespace Plugin.HttpClient.Server
 				else
 				{
 					response.StatusCode = (Int32)HttpStatusCode.InternalServerError;
-					this.WriteToResponseStream(response, exc.Message);
+					WriteToResponseStream(response, exc.Message);
 					testResult = new ResultException(null, request, exc);
 				}
 			}
@@ -149,16 +158,16 @@ namespace Plugin.HttpClient.Server
 			return result;
 		}
 
-		private void WriteToResponseStream(HttpListenerResponse response, String message)
+		private static void WriteToResponseStream(HttpListenerResponse response, String message)
 		{
 			if(response.ContentEncoding == null)
 				response.ContentEncoding = Encoding.UTF8;
 
 			Byte[] data = response.ContentEncoding.GetBytes(message);
-			this.WriteToResponseStream(response, data);
+			WriteToResponseStream(response, data);
 		}
 
-		private void WriteToResponseStream(HttpListenerResponse response, Byte[] data)
+		private static void WriteToResponseStream(HttpListenerResponse response, Byte[] data)
 		{
 			if(response.ContentEncoding == null)
 				response.ContentEncoding = Encoding.UTF8;
@@ -168,22 +177,22 @@ namespace Plugin.HttpClient.Server
 				output.Write(data, 0, data.Length);
 		}
 
-		/// <summary>Получить результат из подгруженных контроллеров</summary>
-		/// <param name="uri">Вызываемая ссылка</param>
-		/// <param name="request">Входящий HTTP(S) запрос</param>
-		/// <returns>Результат в массиве байт или null</returns>
+		/// <summary>Get the result from loaded controllers.</summary>
+		/// <param name="uri">Invoked URL</param>
+		/// <param name="request">Incoming HTTP(S) request</param>
+		/// <returns>Result in byte array or null</returns>
 		private HttpProjectItem FindProjectItem(Uri uri, HttpListenerRequest request)
 		{
 			//We don't need this condition because we have relative search config control
 			//String searchUrl = uri.ToString().Replace(this._plugin.Settings.GetServerUrl(), PluginSettings.Constants.TemplateServerUrl);
 			String searchUrl = uri.ToString();
 
-			HttpProjectItem tempate = new HttpProjectItem(request)
+			HttpProjectItem template = new HttpProjectItem(request)
 			{
 				Address = searchUrl,
 			};
 
-			HttpProjectItem[] found = this._plugin.SearchForProjectItems(tempate).Take(2).ToArray();
+			HttpProjectItem[] found = this._plugin.SearchForProjectItems(template).Take(2).ToArray();
 			if(found.Length == 0)
 				this._plugin.Trace.TraceEvent(TraceEventType.Information, 17, "Url: {0} - Not found in open projects", searchUrl);
 			else if(found.Length > 1)
@@ -203,18 +212,6 @@ namespace Plugin.HttpClient.Server
 			{
 				exc.Data.Add("netsh", $"netsh http add urlacl url={serverUrl} user={Environment.UserDomainName}\\{Environment.UserName}");
 				this._plugin.Trace.TraceEvent(TraceEventType.Warning, 6, "You have to reserve host with netsh (see exception details for example) command or run application in [Administrator] mode.");
-			}
-		}
-
-		private Byte[] GetProcessIcon()
-		{
-			Icon ico = this._plugin.GetApplicationIcon();
-			if(ico == null)
-				return null;
-			using(MemoryStream stream = new MemoryStream())
-			{
-				ico.Save(stream);
-				return stream.ToArray();
 			}
 		}
 	}

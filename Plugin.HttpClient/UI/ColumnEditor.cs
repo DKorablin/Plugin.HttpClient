@@ -22,16 +22,16 @@ namespace Plugin.HttpClient.UI
 
 			((IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService))).DropDownControl(this._control);
 
-			return this._control.Result; //return base.EditValue(context, provider, value);
+			return this._control.Result;
 		}
 
 		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
-			=> UITypeEditorEditStyle.DropDown; //return base.GetEditStyle(context);
+			=> UITypeEditorEditStyle.DropDown;
 
 		#endregion Methods
-		private class ColumnEditorControl : UserControl
+		private sealed class ColumnEditorControl : UserControl
 		{
-			private CheckedListBox cblColumns = new CheckedListBox();
+			private readonly CheckedListBox cblColumns = new CheckedListBox();
 
 			public T[] Result
 			{

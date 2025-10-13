@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using Plugin.HttpClient.Events;
@@ -44,6 +42,7 @@ namespace Plugin.HttpClient
 		{
 			this.Window.SetTabPicture(Resources.Application);
 			lvRequests.Plugin = this.Plugin;
+			txtResponse.SelectionTabs = Enumerable.Repeat(50, 30).ToArray();//Reduce default tab size
 			this.LoadProject();
 
 			this.Window.Closed += this.Window_Closed;
@@ -129,7 +128,7 @@ namespace Plugin.HttpClient
 		}
 
 		private void ToggleNodeSelected()
-			=> this.ToggleNodeSelected((HttpProjectItem)lvRequests.SelectedObject);
+			=> this.ToggleNodeSelected(lvRequests.SelectedObject);
 
 		private void ToggleNodeSelected(HttpProjectItem item)
 		{
@@ -142,13 +141,13 @@ namespace Plugin.HttpClient
 			} else
 			{
 				pgProperties.SelectedItem = item;
-				if(item.HttpResponse == null)
+				if(item.LastResponse == null)
 				{
 					if(tabSettings.TabPages.Contains(tabPageResponse))
 						tabSettings.TabPages.Remove(tabPageResponse);
 				} else
 				{
-					txtResponse.Text = item.HttpResponse;
+					this.bnResponseWithHeaders_Click(null, EventArgs.Empty);
 					if(!tabSettings.TabPages.Contains(tabPageResponse))
 						tabSettings.TabPages.Add(tabPageResponse);
 
@@ -193,7 +192,7 @@ namespace Plugin.HttpClient
 
 		private void lvRequests_CellEditFinished(Object sender, CellEditEventArgs e)
 		{
-			if(e.Cancel == true) return;
+			if(e.Cancel) return;
 
 			HttpProjectItem item = lvRequests.SelectedObject;
 			this.ToggleNodeSelected(item);
@@ -242,22 +241,13 @@ namespace Plugin.HttpClient
 				break;
 			case Keys.Apps:
 				throw new NotImplementedException();
-				/*if(tvRequests.SelectedNode != null)
-				{
-					e.Handled = true;
-					this.OpenContextMenu(tvRequests.SelectedNode.Bounds.Location);
-				}
-				break;*/
 			}
 		}
 
 		private void lvRequests_MouseClick(Object sender, MouseEventArgs e)
 		{
-			if(e.Button == MouseButtons.Right)
-			{
-				if(lvRequests.SelectedObject != null)
-					this.OpenContextMenu(e.Location);
-			}
+			if(e.Button == MouseButtons.Right && lvRequests.SelectedObject != null)
+				this.OpenContextMenu(e.Location);
 		}
 
 		private void OpenContextMenu(Point location)
@@ -265,7 +255,7 @@ namespace Plugin.HttpClient
 
 		private void lvRequests_MouseDoubleClick(Object sender, MouseEventArgs e)
 		{
-			HttpProjectItem item = (HttpProjectItem)lvRequests.SelectedObject;
+			HttpProjectItem item = lvRequests.SelectedObject;
 			if(item != null)
 				this.cmsProject_ItemClicked(sender, new ToolStripItemClickedEventArgs(tsmiProjectRun));
 		}
@@ -525,7 +515,7 @@ namespace Plugin.HttpClient
 
 		private void txtResponse_LinkClicked(Object sender, LinkClickedEventArgs e)
 		{
-			HttpProjectItem item = (HttpProjectItem)lvRequests.SelectedObject;
+			HttpProjectItem item = lvRequests.SelectedObject;
 			HttpProjectItemCollection collection = item == null ? lvRequests.Project.Items : item.Items;
 			_ = collection.Add(e.LinkText);
 			lvRequests.RefreshSelectedObjects();
@@ -611,6 +601,17 @@ namespace Plugin.HttpClient
 				ddlTemplateName.Text = lvRequests.Project.SelectedTemplate;
 				this.ddlTemplateName_TextChanged(null, null);
 			}
+		}
+
+		private void bnResponseWithHeaders_Click(Object sender, EventArgs e)
+		{
+			Boolean withHeaders = bnResponseWithHeaders.Checked;
+			bnResponseWithHeaders.Checked = !withHeaders;
+			HttpProjectItem item = lvRequests.SelectedObject;
+
+			txtResponse.Text = withHeaders
+				? item.LastResponse.GetBodyWithHeaders()
+				: item.LastResponse.TryFormatBody();
 		}
 
 		private void gvTemplates_OnToggleTemplatesDirty(Object sender, ToggleProjectDirtyEventArgs e)

@@ -154,7 +154,7 @@ namespace Plugin.HttpClient
 				if(_HostAddress == null)
 				{
 					IPHostEntry ip = Dns.GetHostEntry(Dns.GetHostName());
-					_HostAddress = Array.Find(ip.AddressList, (IPAddress addr) => { return addr.AddressFamily == AddressFamily.InterNetwork; });
+					_HostAddress = Array.Find(ip.AddressList, (addr) => addr.AddressFamily == AddressFamily.InterNetwork);
 				}
 				return _HostAddress;
 			}
@@ -176,7 +176,7 @@ namespace Plugin.HttpClient
 
 		/// <summary>Internal stored project</summary>
 		internal HttpProject LoadProject()
-		{//Don't cache project here. Otherwise unsaved changes will be prsist between local windows while application is opened
+		{//Don't cache project here. Otherwise unsaved changes will be persist between local windows while application is opened
 			using(Stream stream = this._plugin.HostWindows.Plugins.Settings(this._plugin).LoadAssemblyBlob(PluginSettings.Constants.ProjectFileKey))
 				return stream == null
 					? null

@@ -17,7 +17,7 @@ namespace Plugin.HttpClient.Test
 		private static Dictionary<String, PropertyInfo> _httpItemPropertyCache;
 
 		public HttpItem Item { get; }
-		private TemplateEngine _templates;
+		private readonly TemplateEngine _templates;
 
 		internal static Dictionary<String, PropertyInfo> HttpItemPropertyCache
 		{
@@ -131,7 +131,7 @@ namespace Plugin.HttpClient.Test
 		{
 			String address = this.ApplyTemplate<String>(nameof(this.Item.Address));
 			if(String.IsNullOrEmpty(address))
-				throw new ArgumentNullException(nameof(this.Item.Address));
+				throw new InvalidOperationException(nameof(this.Item.Address));
 
 			Uri requestUri = new Uri(address);
 			// PATH for .NET Framework 4 or less: URL reverting is done for such situation: /collection/te%5Cst (Because by default it will be converted to: /collection/te/st)
@@ -228,13 +228,13 @@ namespace Plugin.HttpClient.Test
 			}
 		}
 
-		/// <summary>Инициализация прокси</summary>
-		/// <returns>Интерфейс прокси</returns>
+		/// <summary>Create proxy instance</summary>
+		/// <returns>Proxy interface instance</returns>
 		private IWebProxy CreateProxy()
 		{
 			WebProxy result = null;
 
-			// Прописывание прокси
+			// Assign proxy settings
 			String proxyUserName = this.ApplyTemplate<String>(nameof(this.Item.ProxyUserName));
 			String proxyPassword = this.ApplyTemplate<String>(nameof(this.Item.ProxyPassword));
 			String proxyAddress = this.ApplyTemplate<String>(nameof(this.Item.ProxyAddress));
@@ -318,7 +318,7 @@ namespace Plugin.HttpClient.Test
 			Dictionary<PropertyInfo, PropertyInfo> result = new Dictionary<PropertyInfo, PropertyInfo>();
 
 			foreach(PropertyInfo property in T1Properties1)
-				if(property.IsDefined(typeof(CategoryAttribute)) && property.CanRead && property.GetIndexParameters().Length == 0)//Хак для проверки наличия атрибута отображения в UI
+				if(property.IsDefined(typeof(CategoryAttribute)) && property.CanRead && property.GetIndexParameters().Length == 0)//Hack to check presence of UI display attribute
 					foreach(PropertyInfo requestProperty in T2Properties1)
 						if(requestProperty.Name == property.Name && requestProperty.CanWrite && requestProperty.PropertyType == property.PropertyType && requestProperty.GetIndexParameters().Length == 0)
 						{

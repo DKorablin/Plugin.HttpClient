@@ -13,13 +13,6 @@ namespace Plugin.HttpClient.UI
 	internal class HttpTestsListView : TreeListView
 	{
 		private const String ClipboardMagic = "Clipboard";
-		private enum StorageType
-		{
-			Unknown = 0,
-			Binary = 1,
-			Json = 2,
-			Xml = 3,
-		}
 
 		private HttpProject _project;
 
@@ -48,14 +41,8 @@ namespace Plugin.HttpClient.UI
 		{
 			if(this.IsDesignMode) return;
 
-			base.CanExpandGetter = (item) =>
-			{
-				return ((HttpProjectItem)item).Items.Count > 0;
-			};
-			base.ChildrenGetter = (item) =>
-			{
-				return ((HttpProjectItem)item).Items;
-			};
+			base.CanExpandGetter = (item) => ((HttpProjectItem)item).Items.Count > 0;
+			base.ChildrenGetter = (item) => ((HttpProjectItem)item).Items;
 
 			OLVColumn[] columns = Generator.GenerateColumns(typeof(HttpProjectItem)).ToArray();
 			OLVColumn colAddress = Array.Find(columns, c => c.AspectName == nameof(HttpProjectItem.AddressReal))
@@ -63,7 +50,7 @@ namespace Plugin.HttpClient.UI
 			colAddress.ImageGetter = (item) => (Int32)((HttpProjectItem)item).Image;
 
 			base.AllColumns.AddRange(columns);
-			base.Columns.AddRange(columns.Where(c => c.IsVisible == true).ToArray());
+			base.Columns.AddRange(columns.Where(c => c.IsVisible).ToArray());
 
 			this.TreeColumnRenderer.IsShowGlyphs = true;
 			this.TreeColumnRenderer.UseTriangles = true;
@@ -97,7 +84,7 @@ namespace Plugin.HttpClient.UI
 			if(base.IsCellEditing)
 				return;//Editing available only once at a time
 
-			HttpProjectItem selected = (HttpProjectItem)this.SelectedObject;
+			HttpProjectItem selected = this.SelectedObject;
 			HttpProjectItem newItem = new HttpProjectItem();
 			if(selected == null)
 			{
@@ -120,9 +107,9 @@ namespace Plugin.HttpClient.UI
 			HttpProjectItem item = (HttpProjectItem)e.RowObject;
 			if(item != null && item.Address != item.AddressReal)
 				((TextBox)e.Control).Text = item.Address;
-			else if(Object.ReferenceEquals(item.HttpResponse, ClipboardMagic))
+			else if(Object.ReferenceEquals(item.LastResponse, ClipboardMagic))
 			{
-				item.HttpResponse = null;
+				item.LastResponse = null;
 				throw new NotImplementedException();
 			}
 			base.OnCellEditStarting(e);
@@ -141,14 +128,13 @@ namespace Plugin.HttpClient.UI
 			HttpProjectItem item = (HttpProjectItem)e.RowObject;
 			String newValue = (String)e.NewValue;
 			HttpProjectItem parentItem = (HttpProjectItem)this.GetParent(item);
-			if(e.Cancel == true || newValue.Length == 0)
+			if(e.Cancel || newValue.Length == 0)
 			{
 				if(item.Address == null)
 				{
 					parentItem?.Items.Remove(item);
 					this.RemoveObject(item);
 				}
-				return;
 			} else
 			{
 				item.Address = newValue;

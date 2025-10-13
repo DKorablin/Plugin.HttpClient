@@ -109,7 +109,7 @@
 			this.cbHilight.TabIndex = 4;
 			this.cbHilight.Text = "     &Hilight";
 			this.cbHilight.UseVisualStyleBackColor = true;
-			this.cbHilight.CheckedChanged += new System.EventHandler(this.cbHilight_CheckedChanged);
+			this.cbHilight.CheckedChanged += new System.EventHandler(this.cbHighlight_CheckedChanged);
 			this.cbHilight.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchGrid_KeyDown);
 			// 
 			// bnClose

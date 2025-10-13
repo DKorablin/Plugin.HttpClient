@@ -34,7 +34,6 @@ namespace Plugin.HttpClient
 				Int32 intEachCookPartsCount = strEachCookParts.Length;
 				String strCNameAndCValue = String.Empty;
 				String strPNameAndPValue = String.Empty;
-				String strDNameAndDValue = String.Empty;
 				String[] NameValuePairTemp;
 				Cookie cookTemp = new Cookie();
 
@@ -101,7 +100,7 @@ namespace Plugin.HttpClient
 
 			while(i < n)
 			{
-				if(strCookTemp[i].IndexOf("expires=", StringComparison.OrdinalIgnoreCase) > 0)
+				if(strCookTemp[i].IndexOf("expires=", StringComparison.OrdinalIgnoreCase) > -1)
 				{
 					al.Add(strCookTemp[i] + "," + strCookTemp[i + 1]);
 					i = i + 1;

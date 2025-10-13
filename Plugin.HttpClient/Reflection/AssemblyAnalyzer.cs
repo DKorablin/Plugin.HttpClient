@@ -1,17 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AlphaOmega.Debug;
-using AlphaOmega.Debug.CorDirectory.Meta;
 using AlphaOmega.Debug.CorDirectory.Meta.Reader;
 using AlphaOmega.Debug.CorDirectory.Meta.Tables;
 using Plugin.HttpClient.Reflection.Data;
 
 namespace Plugin.HttpClient.Reflection
 {
+	/// <summary>
+	/// Provides lightweight reflection over a compiled .NET assembly (PE file) to discover Web API service types.
+	/// Types are considered services when they are decorated with one of the Route Prefix attributes
+	/// defined in <see cref="Constant.Reflection.WebApi.RoutePrefixAttributes"/>. For each matching type a
+	/// corresponding <see cref="ApiServiceInfo"/> instance is produced that contains method endpoint data.
+	/// Uses AlphaOmega.Debug low-level metadata readers instead of loading the assembly into the AppDomain.
+	/// </summary>
 	internal class AssemblyAnalyzer
 	{
+		/// <summary>
+		/// Scans the specified assembly file for API service endpoint definitions.
+		/// </summary>
+		/// <param name="assemblyPath">Full path to the target managed assembly (.dll) to analyze.</param>
+		/// <returns>
+		/// Sequence of <see cref="ApiServiceInfo"/> describing each discovered service (route prefix + methods).
+		/// Returns an empty sequence if the assembly contains no metadata or no matching types.
+		/// </returns>
+		/// <exception cref="ArgumentNullException">Thrown when <paramref name="assemblyPath"/> is null or empty.</exception>
 		public IEnumerable<ApiServiceInfo> FindEndpoints(String assemblyPath)
 		{
 			if(String.IsNullOrEmpty(assemblyPath))

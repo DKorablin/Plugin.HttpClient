@@ -36,7 +36,26 @@ namespace Plugin.HttpClient.Project
 			=> new DataContractSerializer(typeof(HttpProject), new Type[] { typeof(KeyValuePair<String, TemplateItem[]>[]), typeof(HttpProjectItemCollection) });//HACK: .ctor difference between .NET 3.5 and .NET 5+
 
 		private static DataContractJsonSerializer JsonSerializer
-			=> new DataContractJsonSerializer(typeof(HttpProject), new Type[] { typeof(KeyValuePair<String, TemplateItem[]>[]), typeof(HttpProjectItemCollection) }, Int32.MaxValue, true, null, true);
+			=>
+#if NET8_0_OR_GREATER
+				new DataContractJsonSerializer(
+					typeof(HttpProject),
+					new DataContractJsonSerializerSettings
+					{
+						KnownTypes = new Type[] { typeof(KeyValuePair<String, TemplateItem[]>[]), typeof(HttpProjectItemCollection) },
+						MaxItemsInObjectGraph = Int32.MaxValue,
+						IgnoreExtensionDataObject = true,
+						EmitTypeInformation = EmitTypeInformation.Always,
+					});
+#else
+				new DataContractJsonSerializer(
+					typeof(HttpProject),
+					new Type[] { typeof(KeyValuePair<String, TemplateItem[]>[]), typeof(HttpProjectItemCollection) },
+					Int32.MaxValue,
+					true,
+					null,
+					true);
+#endif
 		#endregion Serialization
 
 		[NonSerialized]
@@ -90,7 +109,6 @@ namespace Plugin.HttpClient.Project
 		public HttpProject()
 		{
 			this._selectedTemplate = Constant.Project.DefaultTemplateName;
-			//this._templates = new List<TemplateItem>();
 			this._templatesCollection = new Dictionary<String, TemplateItem[]>()
 			{
 				{ Constant.Project.DefaultTemplateName, new TemplateItem[]{ } },
@@ -102,7 +120,7 @@ namespace Plugin.HttpClient.Project
 		/// <param name="info">Serialization Information</param>
 		/// <param name="context">Stream</param>
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-		private HttpProject(SerializationInfo info, StreamingContext context)
+		protected HttpProject(SerializationInfo info, StreamingContext context)
 			: this()
 		{
 			foreach(SerializationEntry entry in info)
@@ -156,7 +174,7 @@ namespace Plugin.HttpClient.Project
 		/// <param name="info">Serialization Information</param>
 		/// <param name="context">Stream</param>
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			if(this._items != null && this._items.Count > 0)
 				info.AddValue("I", this._items);
@@ -357,7 +375,6 @@ namespace Plugin.HttpClient.Project
 		{
 			_ = stream ?? throw new ArgumentNullException(nameof(stream));
 
-			//HttpProject.XmlSerializer.Serialize(stream, this);
 			DataContractSerializer serializer = HttpProject.XmlSerializer2;
 			serializer.WriteObject(stream, this);
 		}
@@ -395,8 +412,6 @@ namespace Plugin.HttpClient.Project
 		{
 			_ = stream ?? throw new ArgumentNullException(nameof(stream));
 
-			//HttpProject result = (HttpProject)HttpProject.XmlSerializer.Deserialize(stream);
-			//return result;
 			DataContractSerializer serializer = HttpProject.XmlSerializer2;
 			HttpProject result;
 			try

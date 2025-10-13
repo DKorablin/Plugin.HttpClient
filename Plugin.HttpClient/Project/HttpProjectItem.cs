@@ -13,21 +13,22 @@ namespace Plugin.HttpClient.Project
 	[Serializable]
 	[DefaultProperty(nameof(Address))]
 	[DebuggerDisplay("[{" + nameof(Method) + "}] Address={" + nameof(Address) + "} AddressReal={" + nameof(AddressReal) + "}")]
-	public class HttpProjectItem : HttpItem, INotifyPropertyChanged
+	public class HttpProjectItem : HttpItem
 	{
 		private HttpProjectItemCollection _items = new HttpProjectItemCollection();
 
 		[NonSerialized]
-		private String _httpResponse;
+		private HttpItemResponse _lastResponse;
 
 		[NonSerialized]
 		private NodeStateEnum _image = NodeStateEnum.New;
 
 		#region Properties
-		internal String HttpResponse
+		/// <summary>The last test response information</summary>
+		internal HttpItemResponse LastResponse
 		{
-			get => this._httpResponse;
-			set => base.SetField(ref this._httpResponse, value, nameof(this.HttpResponse));
+			get => this._lastResponse;
+			set => base.SetField(ref this._lastResponse, value, nameof(this.LastResponse));
 		}
 
 		internal NodeStateEnum Image
@@ -46,7 +47,7 @@ namespace Plugin.HttpClient.Project
 			}
 		}
 
-		/// <summary>Отформатированная ссылка по шаблону</summary>
+		/// <summary>Formatted url using template</summary>
 		[Browsable(false)]
 		[OLVColumn("Address", DisplayIndex = 0, IsEditable = true, IsTileViewColumn = true, UseFiltering = false, UseInitialLetterForGroup = false, AutoCompleteEditor = false, WordWrap = false)]
 		public String AddressReal
@@ -262,7 +263,7 @@ namespace Plugin.HttpClient.Project
 			set => base.Description = this.ApplyTemplate(nameof(this.Description), value, false);
 		}
 
-		/// <summary>Дочерние запросы удалённого сервера на тестирование</summary>
+		/// <summary>Child requests of remote server for testing</summary>
 		[Browsable(false)]
 		public HttpProjectItemCollection Items
 		{
@@ -337,9 +338,9 @@ namespace Plugin.HttpClient.Project
 		/// True - Replace found template key to template values
 		/// False - Replace template values to template keys
 		/// </param>
-		/// <returns>Value after repacting template keys or template values</returns>
+		/// <returns>Value after replacing template keys or template values</returns>
 		private T ApplyTemplate<T>(String propertyName, T value, Boolean isApply)
-			=> this.Items.Project != null//Project can be null of transferred from a different project (Drag'n'Drop)
+			=> this.Items.Project != null//Project can be null of transferred from a different project (Drag&Drop)
 				? this.Items.Project.Templates.ApplyTemplateV2(propertyName, value, isApply)
 				: value;
 
@@ -351,7 +352,7 @@ namespace Plugin.HttpClient.Project
 			Dictionary<PropertyInfo, PropertyInfo> result = new Dictionary<PropertyInfo, PropertyInfo>();
 
 			foreach(PropertyInfo property in T1Properties1)
-				if(property.IsDefined(typeof(CategoryAttribute)) && property.CanRead && property.GetIndexParameters().Length == 0)//Хак для проверки наличия атрибута отображения в UI
+				if(property.IsDefined(typeof(CategoryAttribute)) && property.CanRead && property.GetIndexParameters().Length == 0)//Hack to check if display attribute exists in UI
 					foreach(PropertyInfo requestProperty in T2Properties1)
 						if(requestProperty.Name == property.Name && requestProperty.CanWrite && requestProperty.PropertyType == property.PropertyType && requestProperty.GetIndexParameters().Length == 0)
 						{
@@ -362,17 +363,17 @@ namespace Plugin.HttpClient.Project
 			return result;
 		}
 
-		/// <summary>Сравнение 2х инстансов</summary>
-		/// <param name="item">Инстанс элемента, котрого сравнить с текущим</param>
-		/// <param name="relativeOnly">Сравнить только релятивную часть адреса, без хоста</param>
-		/// <returns>Инстансы равны</returns>
+		/// <summary>Compare 2 instances</summary>
+		/// <param name="item">The instance of the element to compare with the current one</param>
+		/// <param name="relativeOnly">Compare only the relative part of the address, without the host</param>
+		/// <returns>Instances are equal</returns>
 		public Boolean Equals(HttpProjectItem item, Boolean relativeOnly = false)
 		{
 			if(this.Address != null)
 				if(relativeOnly)
 				{
 					if(new Uri(this.AddressReal).PathAndQuery != new Uri(item.AddressReal).PathAndQuery)
-						return false;//Тут используются исправленные ссылки, иниче не спарсятся Uri
+						return false;//Corrected links are used here, otherwise Uri will not be parsed
 				} else if(this.Address != item.Address)
 					return false;
 			if(this.Method != null && this.Method != item.Method)

@@ -12,11 +12,14 @@ namespace Plugin.HttpClient.UI
 {
 	internal class RestoreStatePropertyGrid : PropertyGrid
 	{
-		private class GridItemCopy
+		private sealed class GridItemCopy
 		{
 			public String Label { get; set; }
+
 			public GridItemType GridItemType { get; set; }
+
 			public Boolean Expanded { get; set; }
+
 			public GridItemCopy(GridItem item)
 			{
 				this.Label = item.Label;

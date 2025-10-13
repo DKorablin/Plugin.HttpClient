@@ -6,48 +6,36 @@ namespace Plugin.HttpClient.UI
 	public class HttpTransferEncodingEditor : HttpEditorBase
 	{
 		public override IEnumerable<KeyValuePair<String, String>> GetValues()
-		{
-			return Constant.Http.TransferEncoding;
-		}
+			=> Constant.Http.TransferEncoding;
 	}
 
 	public class HttpMethodEditor : HttpEditorBase
 	{
 		public override IEnumerable<KeyValuePair<String, String>> GetValues()
-		{
-			return Constant.Http.Methods;
-		}
+			=> Constant.Http.Methods;
 	}
 
 	public class HttpExpectHeaderEditor : HttpEditorBase
 	{
 		public override IEnumerable<KeyValuePair<String, String>> GetValues()
-		{
-			return Constant.Http.Expect;
-		}
+			=> Constant.Http.Expect;
 	}
 
 	public class HttpUserAgentEditor : HttpEditorBase
 	{
 		public override IEnumerable<KeyValuePair<String, String>> GetValues()
-		{
-			return Constant.Http.UserAgents;
-		}
+			=> Constant.Http.UserAgents;
 	}
 
 	public class HttpConnectionEditor : HttpEditorBase
 	{
 		public override IEnumerable<KeyValuePair<String, String>> GetValues()
-		{
-			return Constant.Http.Connection;
-		}
+			=> Constant.Http.Connection;
 	}
 
 	public class HttpContentTypeEditor : HttpEditorBase
 	{
 		public override IEnumerable<KeyValuePair<String, String>> GetValues()
-		{
-			return Constant.Http.ContentTypes;
-		}
+			=> Constant.Http.ContentTypes;
 	}
 }

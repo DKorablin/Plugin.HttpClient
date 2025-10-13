@@ -40,14 +40,14 @@ namespace Plugin.HttpClient.Test
 				//this.Result = this.InvokeTestAsync(request);
 
 				// this wil replace values in the this.Variables array because they're passed as a reference type
-				builder.ReplaceTemplateValuesFromResponseString(this.Result.ResponseString);
+				builder.ReplaceTemplateValuesFromResponseString(this.Result.ResponseBody);
 			} catch(Exception exc)
 			{
 				if(Utils.IsFatal(exc))
 					throw;
 
 				//WebException: This can occur if we creating request stream & disconnected from the network
-				//ArgumentException: Failed to parse string valuies to HttpWebRequest object
+				//ArgumentException: Failed to parse string values to HttpWebRequest object
 				this.Result = new ResultException(this.Item, (HttpWebRequest)null, exc);
 			}
 		}
@@ -86,7 +86,7 @@ namespace Plugin.HttpClient.Test
 			return result;
 		}
 
-		private ManualResetEvent allDone = new ManualResetEvent(false);
+		private readonly ManualResetEvent allDone = new ManualResetEvent(false);
 		const Int32 DefaultTimeout = 2 * 60 * 1000; // 2 minutes timeout
 
 		internal class RequestState
@@ -145,9 +145,8 @@ namespace Plugin.HttpClient.Test
 
 			void TimeoutCallback(Object requestState, Boolean timedOut)
 			{
-				if(timedOut)
-					if(requestState is HttpWebRequest r)
-						r?.Abort();
+				if(timedOut && requestState is HttpWebRequest r)
+					r?.Abort();
 			}
 
 			void ResponseCallback(IAsyncResult asynchronousResult)
@@ -164,7 +163,7 @@ namespace Plugin.HttpClient.Test
 		private ResultBase Validate2(RequestBuilder builder, HttpWebRequest request, HttpWebResponse response)
 		{
 			ResultBase result = new ResultResponse(builder.CloneRequest(), request, response);
-			ValidationFailureStatus validation = this.Validate(builder.Item, response.StatusCode, result.ResponseString);
+			ValidationFailureStatus validation = this.Validate(builder.Item, response.StatusCode, result.ResponseBody);
 			if(validation != null)
 			{
 				if(validation.ActualCode != validation.ExpectedCode)

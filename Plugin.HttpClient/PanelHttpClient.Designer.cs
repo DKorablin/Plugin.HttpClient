@@ -36,6 +36,7 @@ namespace Plugin.HttpClient
 			System.Windows.Forms.ToolStripSeparator tss2;
 			System.Windows.Forms.ToolStripSeparator tsddlProjectSeparator;
 			System.Windows.Forms.ToolStripSeparator tss4;
+			System.Windows.Forms.ToolStrip tsResponse;
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelHttpClient));
 			this.tsbnRequestAdd = new System.Windows.Forms.ToolStripButton();
 			this.tsbnRequestRemove = new System.Windows.Forms.ToolStripButton();
@@ -63,6 +64,7 @@ namespace Plugin.HttpClient
 			this.ddlTemplateName = new Plugin.HttpClient.UI.DefaultTextToolStripComboBox();
 			this.bnAddTemplateName = new System.Windows.Forms.ToolStripButton();
 			this.bnEditTemplates = new System.Windows.Forms.ToolStripButton();
+			this.bnResponseWithHeaders = new System.Windows.Forms.ToolStripButton();
 			this.tabPageResponse = new System.Windows.Forms.TabPage();
 			this.txtResponse = new System.Windows.Forms.RichTextBox();
 			this.cmsProject = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -82,6 +84,8 @@ namespace Plugin.HttpClient
 			tsddlProjectSeparator = new System.Windows.Forms.ToolStripSeparator();
 			tss4 = new System.Windows.Forms.ToolStripSeparator();
 			tsMain.SuspendLayout();
+			tsResponse = new System.Windows.Forms.ToolStrip();
+			tsResponse.SuspendLayout();
 			this.splitMain.Panel1.SuspendLayout();
 			this.splitMain.Panel2.SuspendLayout();
 			this.splitMain.SuspendLayout();
@@ -278,9 +282,9 @@ namespace Plugin.HttpClient
 			this.gridSearch.DataGrid = null;
 			this.gridSearch.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.gridSearch.EnableFindCase = true;
-			this.gridSearch.EnableFindHilight = true;
+			this.gridSearch.EnableFindHighlight = true;
 			this.gridSearch.EnableFindPrevNext = true;
-			this.gridSearch.EnableSearchHilight = false;
+			this.gridSearch.EnableSearchHighlight = false;
 			this.gridSearch.ListView = this.lvRequests;
 			this.gridSearch.Location = new System.Drawing.Point(0, 81);
 			this.gridSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -451,9 +455,21 @@ namespace Plugin.HttpClient
 			this.bnEditTemplates.Text = "Edit templates";
 			this.bnEditTemplates.Click += new System.EventHandler(this.bnEditTemplates_Click);
 			// 
+			// bnResponseWithHeaders
+			// 
+			this.bnResponseWithHeaders.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.bnResponseWithHeaders.Image = global::Plugin.HttpClient.Properties.Resources.bnCompile;
+			this.bnResponseWithHeaders.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.bnResponseWithHeaders.Name = "bnResponseWithHeaders";
+			this.bnResponseWithHeaders.Size = new System.Drawing.Size(29, 25);
+			this.bnResponseWithHeaders.Text = "Show headers";
+			this.bnResponseWithHeaders.Checked = true;
+			this.bnResponseWithHeaders.Click += new System.EventHandler(this.bnResponseWithHeaders_Click);
+			// 
 			// tabPageResponse
 			// 
 			this.tabPageResponse.Controls.Add(this.txtResponse);
+			this.tabPageResponse.Controls.Add(tsResponse);
 			this.tabPageResponse.Location = new System.Drawing.Point(4, 25);
 			this.tabPageResponse.Margin = new System.Windows.Forms.Padding(4);
 			this.tabPageResponse.Name = "tabPageResponse";
@@ -476,6 +492,19 @@ namespace Plugin.HttpClient
 			this.txtResponse.Text = "";
 			this.txtResponse.WordWrap = false;
 			this.txtResponse.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtResponse_LinkClicked);
+			// 
+			// tsResponse
+			// 
+			tsResponse.ImageScalingSize = new System.Drawing.Size(20, 20);
+			tsResponse.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
+			{
+				bnResponseWithHeaders,
+			});
+			tsResponse.Location = new System.Drawing.Point(0, 0);
+			tsResponse.Name = "tsResponse";
+			tsResponse.Size = new System.Drawing.Size(239, 27);
+			tsResponse.TabIndex = 0;
+			tsResponse.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			// 
 			// cmsProject
 			// 
@@ -570,6 +599,8 @@ namespace Plugin.HttpClient
 			this.Size = new System.Drawing.Size(255, 285);
 			tsMain.ResumeLayout(false);
 			tsMain.PerformLayout();
+			tsResponse.ResumeLayout(false);
+			tsResponse.PerformLayout();
 			this.splitMain.Panel1.ResumeLayout(false);
 			this.splitMain.Panel2.ResumeLayout(false);
 			this.splitMain.ResumeLayout(false);
@@ -631,5 +662,7 @@ namespace Plugin.HttpClient
 		private AlphaOmega.Windows.Forms.SearchGrid gridSearch;
 		private System.Windows.Forms.ContextMenuStrip cmsProperties;
 		private System.Windows.Forms.ToolStripMenuItem PropertiesReset;
+
+		private System.Windows.Forms.ToolStripButton bnResponseWithHeaders;
 	}
 }

@@ -16,7 +16,7 @@ namespace Plugin.HttpClient.Project
 
 		/// <summary>This key is a system property reference</summary>
 		/// <remarks>It starts from "System." prefix</remarks>
-		/// <returns>The key is a sysmtem property</returns>
+		/// <returns>The key is a system property</returns>
 		public Boolean IsSystem()
 			=> this.Key?.StartsWith(Constant.Project.TemplateDefaultValuePrefix) ?? false;
 
