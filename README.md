@@ -1,6 +1,6 @@
 # Plugin.HttpClient
 
-[!\[Auto build](https://github.com/DKorablin/Plugin.HttpClient/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/Plugin.HttpClient/releases/latest)
+[![Auto build](https://github.com/DKorablin/Plugin.HttpClient/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/Plugin.HttpClient/releases/latest)
 
 Plugin.HttpClient is a dual-target (.NET Framework 3.5 / .NET 8) SAL plugin that provides:
 
