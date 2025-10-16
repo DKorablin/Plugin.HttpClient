@@ -4,9 +4,10 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<OutputType>Library</OutputType>
 		<RootNamespace>Plugin.HttpClient</RootNamespace>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Configuration>Debug</Configuration>
 		<Deterministic>false</Deterministic>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);SYSLIB0011;CA1416</NoWarn>
 		<DefineConstants>$(DefineConstants)</DefineConstants>
@@ -34,6 +35,7 @@
 		<Authors>Danila Korablin</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
+		<PackageIcon>docs\SAL.65.png</PackageIcon>
 		<RepositoryUrl>https://github.com/DKorablin/Plugin.HttpClient</RepositoryUrl>
 		<PackageTags>SAL plugin http server client test</PackageTags>
 	</PropertyGroup>
@@ -54,6 +56,7 @@
 
 	<ItemGroup>
 		<None Include="..\README.md" Pack="true" PackagePath="\docs" />
+		<EmbeddedResource Include="..\Images.Shared\SAL.65.png" Pack="true" PackagePath="\docs" />
 	</ItemGroup>
 
 	<ItemGroup>
