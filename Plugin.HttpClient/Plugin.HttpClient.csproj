@@ -19,13 +19,6 @@
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'net35'">
-		<AssemblyAttributes Include="AssemblyMetadata">
-			<_Parameter1>ProjectUrl</_Parameter1>
-			<_Parameter2>https://github.com/DKorablin/Plugin.HttpClient</_Parameter2>
-		</AssemblyAttributes>
-	</ItemGroup>
-
 	<!--nuspec-->
 	<PropertyGroup>
 		<PackageId>AlphaOmega.SAL.Plugin.HttpClient</PackageId>
@@ -39,24 +32,17 @@
 		<RepositoryUrl>https://github.com/DKorablin/Plugin.HttpClient</RepositoryUrl>
 		<PackageTags>SAL plugin http server client test</PackageTags>
 	</PropertyGroup>
-	<ItemGroup>
-		<Compile Include="..\WinForms.Shared\SearchGrid\SearchGrid.cs">
-			<Link>UI\SearchGrid.cs</Link>
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Include="..\WinForms.Shared\SearchGrid\SearchGrid.designer.cs">
-			<Link>UI\SearchGrid.designer.cs</Link>
-			<DependentUpon>SearchGrid.cs</DependentUpon>
-		</Compile>
-		<EmbeddedResource Include="..\WinForms.Shared\SearchGrid\SearchGrid.resx">
-			<Link>UI\SearchGrid.resx</Link>
-			<DependentUpon>SearchGrid.cs</DependentUpon>
-		</EmbeddedResource>
-	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\README.md" Pack="true" PackagePath="\docs" />
 		<EmbeddedResource Include="..\Images.Shared\SAL.65.png" Pack="true" PackagePath="\docs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<AssemblyAttributes Include="AssemblyMetadata">
+			<_Parameter1>ProjectUrl</_Parameter1>
+			<_Parameter2>https://github.com/DKorablin/Plugin.HttpClient</_Parameter2>
+		</AssemblyAttributes>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -71,5 +57,20 @@
 		<Reference Include="System.Design" />
 		<Reference Include="System.Runtime.Serialization" />
 		<Reference Include="System.ServiceModel.Web" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Compile Include="..\WinForms.Shared\SearchGrid\SearchGrid.cs">
+			<Link>UI\SearchGrid.cs</Link>
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Include="..\WinForms.Shared\SearchGrid\SearchGrid.designer.cs">
+			<Link>UI\SearchGrid.designer.cs</Link>
+			<DependentUpon>SearchGrid.cs</DependentUpon>
+		</Compile>
+		<EmbeddedResource Include="..\WinForms.Shared\SearchGrid\SearchGrid.resx">
+			<Link>UI\SearchGrid.resx</Link>
+			<DependentUpon>SearchGrid.cs</DependentUpon>
+		</EmbeddedResource>
 	</ItemGroup>
 </Project>

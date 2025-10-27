@@ -3,10 +3,10 @@
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageVersion Include="SAL.Windows" Version="1.2.10">
+		<PackageVersion Include="SAL.Windows" Version="1.2.11">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageVersion>
-		<PackageVersion Include="AlphaOmega.PEReader" Version="1.3.5" />
+		<PackageVersion Include="AlphaOmega.PEReader" Version="1.3.6" />
 		<PackageVersion Include="AlphaOmega.ObjectListView" Version="2.9.9" />
 		<!--Analyzers-->
 		<GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.8.0.113526">
