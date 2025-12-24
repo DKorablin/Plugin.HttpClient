@@ -605,8 +605,8 @@ namespace Plugin.HttpClient
 
 		private void bnResponseWithHeaders_Click(Object sender, EventArgs e)
 		{
-			Boolean withHeaders = bnResponseWithHeaders.Checked;
-			bnResponseWithHeaders.Checked = !withHeaders;
+			Boolean withHeaders = !bnResponseWithHeaders.Checked;
+			bnResponseWithHeaders.Checked = withHeaders;
 			HttpProjectItem item = lvRequests.SelectedObject;
 
 			txtResponse.Text = withHeaders
