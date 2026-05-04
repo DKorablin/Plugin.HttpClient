@@ -13,7 +13,7 @@ namespace Plugin.HttpClient
 	{
 		private IWindow Window => (IWindow)base.Parent;
 
-		private PluginWindows Plugin => (PluginWindows)this.Window.Plugin;
+		private PluginWindows Plugin => (PluginWindows)this.Window.Plugin.Instance;
 
 		private ListViewItem SelectedListItem
 			=> lvHistory.SelectedItems.Count == 0 ? null : lvHistory.SelectedItems[0];

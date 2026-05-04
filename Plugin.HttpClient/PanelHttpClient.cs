@@ -23,7 +23,7 @@ namespace Plugin.HttpClient
 
 		private IWindow Window => (IWindow)base.Parent;
 
-		private PluginWindows Plugin => (PluginWindows)this.Window.Plugin;
+		private PluginWindows Plugin => (PluginWindows)this.Window.Plugin.Instance;
 
 		Object IPluginSettings.Settings => this.Settings;
 
