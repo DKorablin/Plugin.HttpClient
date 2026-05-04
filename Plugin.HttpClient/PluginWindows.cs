@@ -17,7 +17,6 @@ namespace Plugin.HttpClient
 	public class PluginWindows : IPlugin, IPluginSettings<PluginSettings>
 	{
 		#region Fields
-		private TraceSource _trace;
 		private PluginSettings _settings;
 		private HttpServerFacade _server;
 		private Dictionary<String, DockState> _documentTypes;
@@ -29,7 +28,7 @@ namespace Plugin.HttpClient
 		internal event EventHandler<ProjectClosedEventArgs> OnProjectClosed;
 		internal event EventHandler<ToggleProjectDirtyEventArgs> OnToggleProjectDirty;
 
-		internal TraceSource Trace => this._trace ?? (this._trace = PluginWindows.CreateTraceSource<PluginWindows>());
+		internal ITraceSource Trace { get; }
 
 		internal IHostWindows HostWindows { get; }
 
@@ -71,8 +70,11 @@ namespace Plugin.HttpClient
 			}
 		}
 
-		public PluginWindows(IHostWindows hostWindows)
-			=> this.HostWindows = hostWindows ?? throw new ArgumentNullException(nameof(hostWindows));
+		public PluginWindows(IHostWindows hostWindows, ITraceSource trace)
+		{
+			this.HostWindows = hostWindows ?? throw new ArgumentNullException(nameof(hostWindows));
+			this.Trace = trace ?? throw new ArgumentNullException(nameof(trace));
+		}
 
 		public IWindow GetPluginControl(String typeName, Object args)
 			=> this.CreateWindow(typeName, false, args);
@@ -104,7 +106,7 @@ namespace Plugin.HttpClient
 
 			this.MenuHttpTest = networkTests.Create("HTTP Test Client");
 			this.MenuHttpTest.Name = "Tools.Test.Network.HttpTestClient";
-			this.MenuHttpTest.Click += (sender, e) => { this.CreateWindow(typeof(PanelHttpClient).ToString(), true); };
+			this.MenuHttpTest.Click += (sender, e) => this.CreateWindow(typeof(PanelHttpClient).ToString(), true);
 
 			networkTests.Items.AddRange(new IMenuItem[] { this.MenuHttpTest, });
 
@@ -211,17 +213,8 @@ namespace Plugin.HttpClient
 
 		private Boolean ServerCertificateValidationCallback(Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
 		{
-			this.Trace.TraceInformation("CertificateValidation: PolicyErrors: {0} Certificate: {1}", sslPolicyErrors, certificate);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "CertificateValidation: PolicyErrors: {0} Certificate: {1}", sslPolicyErrors, certificate);
 			return true;
-		}
-
-		private static TraceSource CreateTraceSource<T>(String name = null) where T : IPlugin
-		{
-			TraceSource result = new TraceSource(typeof(T).Assembly.GetName().Name + name);
-			result.Switch.Level = SourceLevels.All;
-			result.Listeners.Remove("Default");
-			result.Listeners.AddRange(System.Diagnostics.Trace.Listeners);
-			return result;
 		}
 
 		private void Settings_PropertyChanged(Object sender, System.ComponentModel.PropertyChangedEventArgs e)

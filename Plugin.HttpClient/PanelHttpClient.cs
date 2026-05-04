@@ -94,7 +94,7 @@ namespace Plugin.HttpClient
 		private void SetWindowCaption()
 			=> this.Window.Caption = this.Settings.ProjectFileName == null
 				? PanelHttpClient.Caption
-				: String.Join(" - ", new String[] { Path.GetFileName(this.Settings.ProjectFileName), PanelHttpClient.Caption, });
+				: String.Join(" - ", Path.GetFileName(this.Settings.ProjectFileName), PanelHttpClient.Caption);
 
 		/// <summary>Upload the project to the form</summary>
 		/// <param name="filePath">File path or download from local storage</param>

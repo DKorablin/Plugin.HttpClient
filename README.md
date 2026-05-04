@@ -2,7 +2,7 @@
 
 [![Auto build](https://github.com/DKorablin/Plugin.HttpClient/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/Plugin.HttpClient/releases/latest)
 
-Plugin.HttpClient is a dual-target (.NET Framework 3.5 / .NET 8) SAL plugin that provides:
+Plugin.HttpClient is a dual-target (.NET Framework 4.8 / .NET 8) SAL plugin that provides:
 
 * An HTTP/HTTPS test client (request editing, templating, auth, headers, cookies, certificates, proxy)
 * A lightweight in-process mock/test HTTP server with routing to saved project items

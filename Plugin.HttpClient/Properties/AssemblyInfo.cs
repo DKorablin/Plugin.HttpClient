@@ -5,4 +5,3 @@ using System.Runtime.InteropServices;
 [assembly: System.CLSCompliant(false)]
 
 [assembly: AssemblyDescription("HTTP Test client & server")]
-[assembly: AssemblyCopyright("Copyright © Danila Korablin 2015-2025")]
